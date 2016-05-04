@@ -7,11 +7,11 @@ var express = require('express'),
 */
 var theme_order = [
       'Border Force',
-      'Health & Disability',
-      'Working Age',
-      'Retirement Provision',
-      'Fraud & Debt',
-      'Platforms'
+      'Immigration Enforcement',
+      'UKVI',
+      "Her Majesty's Passport Office",
+      'Intelligence',
+      'Misc'
     ];
 
 var priority_order = [
