@@ -11,6 +11,7 @@ var theme_order = [
       'UKVI',
       "Her Majesty's Passport Office",
       'Intelligence',
+      'IDP',
       'Misc'
     ];
 

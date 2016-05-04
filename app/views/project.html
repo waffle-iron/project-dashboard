@@ -13,6 +13,10 @@
 	<div class="grid-row">
 		<section class="column-two-thirds">
 
+			{% if data["service_url"] %}
+				<p><a href = "{{ data.service_url }}">{{ data.service_url }}</a></p>
+			{% endif %}
+
 			<p>{{ data.description }}</p>
 
 			<div class="location">Based in <strong>{{ data.location }}</strong></div>
@@ -41,6 +45,9 @@
 
 			<h3 class="heading-small">Senior Responsible Officer</h3>
 			<p>{{ data.sro | default('Not set') }}</p>
+
+			<h3 class="heading-small">Digital Sponsor</h3>
+			<p><a href="mailto:{{ data.sponsor_email | default('Not set') }}">{{ data.sponsor | default('Not set') }}</a></p>
 
 			<h3 class="heading-small">Service Manager</h3>
 			<p>{{ data.service_man | default('Not set') }}</p>
