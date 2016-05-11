@@ -3,16 +3,14 @@ var express = require('express'),
     _       = require('underscore');
 
 /*
-  A way to force the ordering of the themes.
+  A way to force the ordering of the directorates.
 */
-var theme_order = [
+var directorate_order = [
       'Border Force',
       'Immigration Enforcement',
       'UKVI',
       "Her Majesty's Passport Office",
-      'Intelligence',
-      'IDP',
-      'Misc'
+      'Cross Home Office'
     ];
 
 var priority_order = [
@@ -32,7 +30,7 @@ var priority_descriptions = {
 /*
   A way to force the ordering of the phases.
 */
-var phase_order = ['backlog','discovery','alpha','beta','live'];
+var phase_order = ['discovery','alpha','beta','live'];
 
 /*
   A function to gather the data by
@@ -60,14 +58,14 @@ function indexify(data)
 */
 router.get('/', function (req, res)
 {
-  var data = _.groupBy(req.app.locals.data, 'theme');
+  var data = _.groupBy(req.app.locals.data, 'directorate');
   var new_data = indexify(data);
   var phases = _.countBy(req.app.locals.data, 'phase');
   res.render('index', {
     "data":new_data,
     "counts":phases,
-    "view":"theme",
-    "theme_order":theme_order,
+    "view":"directorate",
+    "directorate_order":directorate_order,
     "phase_order":phase_order
     }
   );
@@ -93,7 +91,7 @@ router.get('/location/', function (req, res)
     "data":new_data,
     "counts":phases,
     "view":"location",
-    "theme_order":loc_order,
+    "directorate_order":loc_order,
     "phase_order":phase_order
   });
 });
@@ -113,7 +111,7 @@ router.get('/priority/', function (req, res)
     "data":new_data,
     "counts":phases,
     "view":"priority",
-    "theme_order":priority_order,
+    "directorate_order":priority_order,
     "phase_order":phase_order,
     "priority_descriptions":priority_descriptions
     }

@@ -10,15 +10,12 @@
 
 	<p style="margin-top:30px;">
 		These are all the things we're doing 
-		{% if view != 'theme' %}(<a href="/">order by theme</a>){% endif %}
+		{% if view != 'directorate' %}(<a href="/">order by directorate</a>){% endif %}
+		{% if view != 'theme' %}(<a href="/theme">order by theme</a>){% endif %}
 		{% if view != 'location' %}(<a href="/location/">order by location</a>){% endif %}
 	</p>
 
 	<div class="grid-row">
-		<section class="column-fifth">
-			<div class="tag backlog">backlog</div>
-			<div class="big_number txt-backlog">{{ counts.backlog }}</div>
-		</section>
 		<section class="column-fifth">
 			<div class="tag discovery">Discovery</div>
 			<div class="big_number txt-discovery">{{ counts.discovery }}</div>
@@ -38,11 +35,11 @@
 	</div>
 
 	{#
-		theme_order & phase_order are set in routes.js
+		directorate_order & phase_order are set in routes.js
 		so them can be used in multiple pages.
 	#}
 
-	{% for name in theme_order %}
+	{% for name in directorate_order %}
 
 		{% set item = data[name] %}
 		<h2 class="heading-large service-area">{{ name }}</h2>
