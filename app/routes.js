@@ -13,6 +13,14 @@ var directorate_order = [
       'Cross Home Office'
     ];
 
+//var theme_order = [
+//    'Making decisions and issuing things',
+//    'Understanding what to do and communicating',
+//    'Monitoring, searching and anlysing data',
+//    'Getting permissions to do something',
+//    'Improving Home Office Digital'
+//]
+
 var priority_order = [
       'Top',
       'High',
@@ -92,6 +100,33 @@ router.get('/location/', function (req, res)
     "counts":phases,
     "view":"location",
     "directorate_order":loc_order,
+    "phase_order":phase_order
+  });
+});
+
+
+
+/*
+ - - - - - - - - - -  THEME INDEX PAGE - - - - - - - - - -
+ */
+router.get('/theme/', function (req, res)
+{
+  var data = _.groupBy(req.app.locals.data, 'theme');
+  var new_data = indexify(data);
+
+  var theme_order = [];
+  _.each(data, function(value, key, list)
+  {
+    theme_order.push(key);
+  });
+  theme_order.sort();
+
+  var phases = _.countBy(req.app.locals.data, 'phase');
+  res.render('index', {
+    "data":new_data,
+    "counts":phases,
+    "view":"theme",
+    "directorate_order":theme_order,
     "phase_order":phase_order
   });
 });

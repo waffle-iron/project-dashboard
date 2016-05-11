@@ -9,7 +9,11 @@
 <main id="content" role="main">
 
 	<p style="margin-top:30px;">
-		These are all the things we're doing 
+		Our services, ordered by
+		{% if view == 'directorate' %} directorate {% endif %}
+		{% if view == 'theme' %} theme {% endif %}
+		{% if view == 'location' %} location {% endif %}
+
 		{% if view != 'directorate' %}(<a href="/">order by directorate</a>){% endif %}
 		{% if view != 'theme' %}(<a href="/theme">order by theme</a>){% endif %}
 		{% if view != 'location' %}(<a href="/location/">order by location</a>){% endif %}
@@ -34,10 +38,7 @@
 		</section>
 	</div>
 
-	{#
-		directorate_order & phase_order are set in routes.js
-		so them can be used in multiple pages.
-	#}
+
 
 	{% for name in directorate_order %}
 
