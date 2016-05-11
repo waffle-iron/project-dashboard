@@ -52,20 +52,20 @@
 		{% for phase in phase_order %}
 			
 			<section class="column-fourth">
-			{% if item[phase] %}			
-				
-				<ul class="link-list border-{{phase}}">
+			{% if item[phase] %}
+
 				{% for bit in item[phase]['user'] %}
+				<ul class="link-list border-{{phase}}">
 					<li><a href="/projects/{{ bit.id }}/{{ bit.name | slugify }}">{{ bit.name }}</a></li>
-				{% endfor %}
 				</ul>
+				{% endfor %}
 
 
-				<ul class="link-list border-internal">
 				{% for bit in item[phase]['internal'] %}
+				<ul class="link-list border-internal">
 					<li><a href="/projects/{{ bit.id }}/{{ bit.name | slugify }}">{{ bit.name }}</a></li>
-				{% endfor %}
 				</ul>
+				{% endfor %}
 
 			{% else %}&nbsp;{% endif %}
 			</section>
