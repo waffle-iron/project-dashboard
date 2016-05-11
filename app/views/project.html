@@ -52,11 +52,22 @@
 			<h3 class="heading-small">Service Manager</h3>
 			<p>{{ data.service_man | default('Not set') }}</p>
 
-			<!--<h3 class="heading-small">Prototype Link</h3>
-			<p><a href="{{ data.prototype | default('#') }}">{{ data.prototype | default('http://not.set/') }}</a></p>-->
 
-			<hr />
-			<p>The <a href="https://github.com/dwpdigitaltech/dwp-portfolio/blob/master/lib/projects/{{data.filename}}">content for this page</a> is open source.</p>
+			{% if data["open_source"] %}
+				<h3 class="heading-small">Components</h3>
+			{% endif %}
+			{% for open_source in data["open_source"] %}
+				<p><a href = "{{ open_source['url'] }}">{{ open_source["name"] }}</a></p>
+			{% endfor %}
+
+			{% if data["related_services"] %}
+			<h3 class="heading-small">Related Services</h3>
+			{% endif %}
+			<p>
+			{% for related_service in data["related_services"] %}
+			<a href = "/projects/{{ related_service['id'] }}/x">{{ related_service["name"] }}</a><br/>
+			{% endfor %}
+			</p>
 		</section>
 	</div>
 </main>
