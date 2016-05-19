@@ -7,21 +7,21 @@
   "location": "London",
   "phase":"beta",
   "phase_modifier":"Private",
-  "sro":"Hugh Pullinger",
-  "service_man":"Daniel McLaughlin",
+  "sro":"Clare Checksfield",
+  "service_man":"Ian Milner",
   "phase-history":{
     "discovery": [
-      {"label":"Completed", "date": "May 2015"}
+      {"label":"Completed", "date": "March 2015"}
     ],
     "alpha": [
-      {"label":"Completed", "date": "October 2015"}
+      {"label":"Completed", "date": "November 2015"}
     ],
     "beta": [
-      {"label":"Started", "date": "November 2015"},
-      {"label":"Private beta started", "date": "December 2015"},
-      {"label":"Public beta predicted", "date": "June 2016"}
-    ]
-  },
-  "priority":"Medium",
-  "prototype":"http://accesstowork.herokuapp.com/application/"
+      {"label":"Private beta completed", "date": "December 2015"},
+      {"label":"Public beta released", "date": "January 2016"}
+    ],
+    "live": [
+    {"label":"Expected live release date", "date": "June 2016"}
+  ]
+  }
 }
