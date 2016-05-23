@@ -6,6 +6,10 @@
   "engines": {
     "node": "4.x"
   },
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "grunt generate-assets"
+  },
   "dependencies": {
     "basic-auth-connect": "1.0.0",
     "browser-sync": "^2.10.0",
