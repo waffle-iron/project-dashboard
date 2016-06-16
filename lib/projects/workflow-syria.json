@@ -6,6 +6,7 @@
     "theme" : "Making decisions and issuing things",
   "location": "Croydon",
   "phase":"alpha",
+  "sro":"Paul Morrison",
   "service_man":"Ben Archibald",
   "facing":"internal",
   "phase-history":{
@@ -16,10 +17,9 @@
       {"label":"Started", "date": "November 2015"}
     ],
     "beta": [
-      {"label":"Expected start date", "date": "June 2016"},
-      
+      {"label":"Expected start date", "date": "June 2016"}
     ]
-  }
+  },
   "priority":"High",
   "prototype":"http://ds1500.herokuapp.com/"
 }

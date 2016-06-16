@@ -6,19 +6,18 @@
     "theme" : "Getting permissions to do something",
   "location": "London",
   "phase":"beta",
-  "sro":"Sarah Cox",
-  "service_man":"Naomi Bell",
+  "sro":"Shane Bryans",
+  "service_man":"Milan Bogunovic",
   "phase-history":{
     "discovery": [
-      {"label":"Completed", "date": "August 2015"}
+      {"label":"Completed", "date": "May 2014"}
     ],
     "alpha": [
-      {"label":"Completed", "date": "December 2015"}
+      {"label":"Completed", "date": "May 2015"}
     ],
     "beta": [
-      {"label":"Started", "date": "January 2016"},
-      {"label":"Private beta predicted", "date": "April 2016"},
-      {"label":"Public beta predicted", "date": "April 2017"}
+      {"label":"Private beta completed", "date": "May 2016"},
+      {"label":"Public beta released", "date": "June 2016"}
     ]
   },
   "priority":"High",

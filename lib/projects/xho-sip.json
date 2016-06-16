@@ -6,20 +6,19 @@
     "theme" : "Monitoring, searching and anlysing data",
   "location": "London",
   "phase":"beta",
-  "phase_modifier":"Private",
-  "sro":"John Fundry",
-  "service_man":"Martin Little",
+  "phase_modifier":"Public",
+  "sro":"David Pennant",
+  "service_man":"Victoria Pullen",
   "phase-history":{
     "discovery": [
-      {"label":"Completed", "date": "May 2014"}
+      {"label":"Completed", "date": "June 2015"}
     ],
     "alpha": [
-      {"label":"Completed", "date": "February 2015"}
+      {"label":"Completed", "date": "October 2015"}
     ],
     "beta": [
-      {"label":"Started", "date": "June 2015"},
-      {"label":"Private beta started", "date": "January 2016"},
-      {"label":"Public beta predicted", "date": "June 2016"}
+      {"label":"Private beta completed", "date": "January 2016"},
+      {"label":"Public beta released", "date": "March 2016"}
     ]
   },
   "priority":"High"

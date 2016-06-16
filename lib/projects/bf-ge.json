@@ -6,7 +6,7 @@
     "theme" : "Getting permissions to do something",
     "location": "London",
     "phase":"beta",
-    "sro":"Derek Hobbs",
+    "sro":"Philip Duffy",
     "sponsor":"Rosanna Fairthorne",
     "sponsor_email":"Rosanna.Fairthorne@homeoffice.gsi.gov.uk",
     "open_source" : [{"name" : "Home Office Forms", "url" : "https://github.com/UKHomeOffice/hof"}],
