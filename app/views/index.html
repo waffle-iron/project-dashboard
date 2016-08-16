@@ -9,14 +9,14 @@
 <main id="content" role="main">
 
 	<p style="margin-top:30px;">
-		Our services, ordered by
-		{% if view == 'directorate' %} directorate {% endif %}
-		{% if view == 'theme' %} theme {% endif %}
-		{% if view == 'location' %} location {% endif %}
+		Our services, ordered by {{ view }}
 
 		{% if view != 'directorate' %}(<a href="/">order by directorate</a>){% endif %}
 		{% if view != 'theme' %}(<a href="/theme">order by theme</a>){% endif %}
 		{% if view != 'location' %}(<a href="/location/">order by location</a>){% endif %}
+		{% if view != 'priority' %}(<a href="/priority">order by priority</a>){% endif %}
+		{% if view != 'health' %}(<a href="/health">order by health</a>){% endif %}
+		
 	</p>
 
 	<div class="grid-row">
@@ -40,7 +40,7 @@
 
 
 
-	{% for name in directorate_order %}
+	{% for name in row_order %}
 
 		{% set item = data[name] %}
 		<h2 class="heading-large service-area">{{ name }}</h2>

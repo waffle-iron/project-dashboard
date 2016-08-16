@@ -1,0 +1,30 @@
+{
+  "id":100,
+  "name":"CAP Delivery",
+  "health": "Fair",
+  "description": "Example description",
+  "directorate": "Rural Payments Agency",
+  "theme" : "Getting permissions to do something",
+  "location": "Reading",
+  "phase":"beta",
+  "sro":"John Doe",
+  "sponsor":"John Sponsor",
+  "sponsor_email":"john@example-sponsor.com",
+  "service_man":"Bob Serviceman",
+  "service_url" : "https://examplewebsiteaddress.com",
+  "phase-history":{
+    "discovery": [
+      {"label":"Completed", "date": "July 2013"}
+    ],
+    "alpha": [
+      {"label":"Completed", "date": "December 2013"}
+    ],
+    "beta": [
+      {"label":"Private beta completed", "date": "September 2014"},
+      {"label":"Public beta completed", "date": "December 2014"}
+    ]
+  },
+  "priority":"Top",
+  "service_assessment_live":"https://example_url_to_service_assessment_live.com",
+  "prototype":"https://example_prototype_address.com"
+}
