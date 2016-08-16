@@ -4,5 +4,51 @@
   "department": "Department",
   "agency": "Agency (if applicable)",
   "phase": "beta",
-  "health": "Good"
+  "health": "Good",
+  "service_url" : "http://www.example.com",
+
+  "phase-history":{
+    "discovery": [
+      {"label":"Completed", "date": "July 2013"}
+    ],
+    "alpha": [
+      {"label":"Completed", "date": "December 2013"}
+    ]
+  },
+
+  "resources": [
+    {
+      "name": "Pre-sales",
+      "url": "https://example.com/presales"
+    },
+    {
+      "name": "Project tracking",
+      "url": "https://example.com/tracking"
+    }
+  ],
+
+  "ourTeam": [
+    {
+      "name": "John Doe",
+      "role": "Technical Architect",
+      "primaryLocation": "Reading",
+      "secondaryLocation": "Belfast",
+      "email": "example@kainos.com",
+      "mobile": "012341234",
+      "skype": "skypeid",
+      "slack": "slackid"
+    },
+    {
+      "name": "Jane Doe",
+      "role": "Business Analyst"
+    }
+  ],
+
+  "clientTeam": [
+    {
+      "name": "Bob Doe",
+      "role": "Chief Executive"
+    }
+  ]
+
 }

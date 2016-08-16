@@ -18,3 +18,4 @@ docs
 *.zip
 .settings/
 /node_modules/
+/lib/

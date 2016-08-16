@@ -107,7 +107,7 @@ if (env === 'production') {
       files:['public/**/*.{js,css}','app/views/**/*.html'],
       ghostmode:{clicks:true, forms: true, scroll:true},
       open:false,
-      port:(+port+1),
+      port:(+port+1), //cast the port to a number to avoid appending 1 to a string
     });
   });
 }
