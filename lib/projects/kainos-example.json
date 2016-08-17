@@ -3,11 +3,14 @@
   "name": "Project title",
   "department": "Department",
   "agency": "Agency (if applicable)",
-  "phase": "beta",
+  "phase": "pipeline",
   "health": "Good",
   "service_url" : "http://www.example.com",
 
   "phase-history":{
+    "pipeline": [
+      {"label":"Completed", "date": "January 2013"}
+    ],
     "discovery": [
       {"label":"Completed", "date": "July 2013"}
     ],
@@ -30,7 +33,7 @@
   "ourTeam": [
     {
       "name": "John Doe",
-      "role": "Technical Architect",
+      "role": "Technical Architect", 
       "primaryLocation": "Reading",
       "secondaryLocation": "Belfast",
       "email": "example@kainos.com",
@@ -40,7 +43,13 @@
     },
     {
       "name": "Jane Doe",
-      "role": "Business Analyst"
+      "role": "Business Analyst",
+      "primaryLocation": "Belfast",
+      "secondaryLocation": "Reading",
+      "email": "jane@kainos.com",
+      "mobile": "999555333",
+      "skype": "janeskypeid",
+      "slack": "janeslackid"
     }
   ],
 

@@ -125,3 +125,10 @@ $(document).ready(function() {
   toggleContent.showHideCheckboxToggledContent();
 
 });
+
+// Used in tables to collapse child rows
+// TODO: make it expand a single row (under the clicked one) instead of triggering all of them in a single click
+$('[data-collapsable-parent]').click(function(){
+	var child = $(this).attr("data-collapsable-parent");
+	$('[data-collapsable-child="' + child + '"]').toggle('fast');
+});

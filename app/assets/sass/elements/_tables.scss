@@ -33,4 +33,9 @@ table {
     @include core-16($tabular-numbers: true);
     text-align: right;
   }
+  
+[data-collapsable-child] {
+   display: none;
+ }
+  
 }

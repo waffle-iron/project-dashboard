@@ -49,7 +49,13 @@
     },
     {
       "name": "Jane Doe",
-      "role": "Business Analyst"
+      "role": "Business Analyst",
+      "primaryLocation": "Belfast",
+      "secondaryLocation": "Reading",
+      "email": "jane@kainos.com",
+      "mobile": "999555333",
+      "skype": "janeskypeid",
+      "slack": "janeslackid"
     }
   ],
   

@@ -13,9 +13,9 @@ router.get('/display/:number?/:location?', function(req,res,next)
   // Grab location from URL (if it's there)
   var location = req.params.location;
 
-  // put data into simpler var for consise-ity (take out backlog stuff).
+  // put data into simpler var for consise-ity (take out pipeline stuff).
   var data = _.filter(req.app.locals.data,function(el) {
-    return (el.phase !== 'backlog');
+    return (el.phase !== 'pipeline');
   });
 
   // if we've got a location filter the data.

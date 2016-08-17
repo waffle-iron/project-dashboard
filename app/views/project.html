@@ -67,16 +67,92 @@
 			{% for related_service in data["related_services"] %}
 				<a href = "/projects/{{ related_service['id'] }}/x">{{ related_service["name"] }}</a><br/>
 			{% endfor %}
-			
-			{% if data["resources"] %}
-			   <h3 class="heading-small">Resources</h3>
-			   {% for resource in data["resources"] %}
-					<a href = "{{ resource['url'] }}">{{ resource["name"] }}</a><br/>
-				 {% endfor %}
-			{% endif %}
 			</p>
 		</section>
 	</div>
-</main>
+	
+	<div class="grid-row">
+		<section class="column-half">
+			<h2 class="heading-medium">Kainos team</h2>
+			<div>
+			{% if data["ourTeam"] %}
+			{# TODO: put the tables in a template #}
+			<table>
+			<thead>
+				<td>Role</td>
+				<td>Name</td> 
+				<td><!-- column for "more" buttons --></td>
+			</thead>
+			 {% for teamMember in data["ourTeam"] %}
+			 <tr>
+			   <td>{{ teamMember.role}}</td>
+			   <td>{{ teamMember.name }}</td>
+			   <td data-collapsable-parent="1">...</td>
+			 </tr>
+			 <tr>
+			   <td data-collapsable-child="1" colspan="3">
+			     <div class="grid-row">
+			       <section class="column-half">
+			         <p>Primary location: {{ teamMember.primaryLocation }} </p>
+			         <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
+			       </section>
+			       <section class="column-half">
+			         <p>Email: {{ teamMember.email}} </p>
+			         <p>Mobile: {{ teamMember.mobile}} </p>
+			       </section>
+			     </div>
+			   </td>
+			 </tr>
+			 {% endfor %}
+			</table>
+			{% endif %}
+			</div>
+		</section>
 
+		<section class="column-half">
+			<h2 class="heading-medium">Client team</h2>
+			<div>
+			{% if data["ourTeam"] %}
+			<table>
+			<thead>
+				<td>Role</td>
+				<td>Name</td> 
+				<td><!-- column for "more" buttons --></td>
+			</thead>
+			 {% for teamMember in data["clientTeam"] %}
+			 <tr>
+			   <td>{{ teamMember.role}}</td>
+			   <td>{{ teamMember.name }}</td>
+			   <td data-collapsable-parent="1">...</td>
+			 </tr>
+			 <tr>
+			   <td data-collapsable-child="1" colspan="3">
+			     <div class="grid-row">
+			       <section class="column-half">
+			         <p>Primary location: {{ teamMember.primaryLocation }} </p>
+			         <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
+			       </section>
+			       <section class="column-half">
+			         <p>Email: {{ teamMember.email}} </p>
+			         <p>Mobile: {{ teamMember.mobile}} </p>
+			       </section>
+			     </div>
+			   </td>
+			 </tr>
+			 {% endfor %}
+			</table>
+			{% endif %}
+			</div>
+		</section>
+	</div>
+	{% if data["resources"] %}
+		<div class="grid-row">
+				<h2 class="heading-medium">Resources</h2>
+				 {% for resource in data["resources"] %}
+					<a href = "{{ resource['url'] }}">{{ resource["name"] }}</a><br/>
+				 {% endfor %}
+		</div>
+	{% endif %}
+		
+</main>
 {% endblock %}
