@@ -1,6 +1,31 @@
-var express = require('express'),
-    router  = express.Router(),
-    _       = require('underscore');
+var express 	= require('express'),
+    router  	= express.Router(),
+    fs          = require('fs'),
+	basicAuth 	= require('basic-auth'),
+    _       	= require('underscore');
+
+try {
+	var userFile = fs.readFileSync(__dirname + '/login-password.json').toString();
+	var storedUser = JSON.parse(userFile);
+} catch(err) {
+	console.log(err);
+}
+
+// Authorize all routes
+router.use(function (req, res, next) {	
+	  function unauthorized(res) {
+	    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+	    return res.send(401);
+	  };
+	  var user = basicAuth(req);
+	  if (!user || !user.name || !user.pass) {
+	    return unauthorized(res);
+	  };
+	  if (user.name === storedUser.login && user.pass === storedUser.password) {
+		return next();
+	  } 
+	  return unauthorized(res);
+});
 
 /*
   A way to force the ordering of the directorates.
