@@ -43,6 +43,15 @@
 				<p class="circle-label">{{ data.phase | title }}</p>
 			</div>
 
+			{% if data["resources"] %}
+				<div class="grid-row">
+						<h2 class="heading-medium">Resources</h2>
+						 {% for resource in data["resources"] %}
+							<a href = "{{ resource['url'] }}">{{ resource["name"] }}</a><br/>
+						 {% endfor %}
+				</div>
+			{% endif %}
+
       {% if data.sponsor %}
 				<h3 class="heading-small">Digital Sponsor</h3>
 				<p><a href="mailto:{{ data.sponsor_email | default('Not set') }}">{{ data.sponsor | default('Not set') }}</a></p>
@@ -72,87 +81,54 @@
 	</div>
 	
 	<div class="grid-row">
-		<section class="column-half">
-			<h2 class="heading-medium">Kainos team</h2>
-			<div>
-			{% if data["ourTeam"] %}
-			{# TODO: put the tables in a template #}
-			<table>
-			<thead>
-				<td>Role</td>
-				<td>Name</td> 
-				<td><!-- column for "more" buttons --></td>
-			</thead>
-			 {% for teamMember in data["ourTeam"] %}
-			 <tr>
-			   <td>{{ teamMember.role}}</td>
-			   <td>{{ teamMember.name }}</td>
-			   <td data-collapsable-parent="1">...</td>
-			 </tr>
-			 <tr>
-			   <td data-collapsable-child="1" colspan="3">
-			     <div class="grid-row">
-			       <section class="column-half">
-			         <p>Primary location: {{ teamMember.primaryLocation }} </p>
-			         <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
-			       </section>
-			       <section class="column-half">
-			         <p>Email: {{ teamMember.email}} </p>
-			         <p>Mobile: {{ teamMember.mobile}} </p>
-			       </section>
-			     </div>
-			   </td>
-			 </tr>
-			 {% endfor %}
-			</table>
-			{% endif %}
-			</div>
-		</section>
-
-		<section class="column-half">
-			<h2 class="heading-medium">Client team</h2>
-			<div>
-			{% if data["ourTeam"] %}
-			<table>
-			<thead>
-				<td>Role</td>
-				<td>Name</td> 
-				<td><!-- column for "more" buttons --></td>
-			</thead>
-			 {% for teamMember in data["clientTeam"] %}
-			 <tr>
-			   <td>{{ teamMember.role}}</td>
-			   <td>{{ teamMember.name }}</td>
-			   <td data-collapsable-parent="1">...</td>
-			 </tr>
-			 <tr>
-			   <td data-collapsable-child="1" colspan="3">
-			     <div class="grid-row">
-			       <section class="column-half">
-			         <p>Primary location: {{ teamMember.primaryLocation }} </p>
-			         <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
-			       </section>
-			       <section class="column-half">
-			         <p>Email: {{ teamMember.email}} </p>
-			         <p>Mobile: {{ teamMember.mobile}} </p>
-			       </section>
-			     </div>
-			   </td>
-			 </tr>
-			 {% endfor %}
-			</table>
-			{% endif %}
-			</div>
-		</section>
-	</div>
-	{% if data["resources"] %}
-		<div class="grid-row">
-				<h2 class="heading-medium">Resources</h2>
-				 {% for resource in data["resources"] %}
-					<a href = "{{ resource['url'] }}">{{ resource["name"] }}</a><br/>
-				 {% endfor %}
-		</div>
-	{% endif %}
-		
+	
+	 {% macro peopleTable(peopleData) %}
+    <section class="column-half">
+      <h2 class="heading-medium">Kainos team</h2>
+        <div>
+          {% if data["ourTeam"] %}
+            <table>
+              <thead>
+                <td>Role</td>
+                <td>Name</td> 
+                <td><!-- column for "more" buttons --></td>
+              </thead>
+               {% for teamMember in peopleData %}
+               <tr>
+                 <td>{{ teamMember.role}}</td>
+                 <td>{{ teamMember.name }}</td>
+                 <td data-collapsable-parent="1">...</td>
+               </tr>
+               <tr>
+                 <td data-collapsable-child="1" colspan="3">
+                   <div class="grid-row">
+                     <section class="column-half">
+                       <p>Primary location: {{ teamMember.primaryLocation }} </p>
+                       {% if teamMember.secondaryLocation %}
+												 <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
+                       {% endif %}
+                     </section>
+                     <section class="column-half">
+                       {% if teamMember.email %}
+												 <p>Email: {{ teamMember.email}} </p>
+                       {% endif %}
+                       
+                       {% if teamMember.mobile %}
+                        <p>Mobile: {{ teamMember.mobile}} </p>
+                       {% endif %}
+                     </section>
+                   </div>
+                 </td>
+               </tr>
+               {% endfor %}
+            </table>
+          {% endif %}
+        </div>
+      </section>
+  {% endmacro %} 
+  
+  {{ peopleTable(data["ourTeam"]) }}
+  {{ peopleTable(data["clientTeam"]) }}
+	</div>	
 </main>
 {% endblock %}

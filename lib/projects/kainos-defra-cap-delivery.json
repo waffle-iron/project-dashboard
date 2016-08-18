@@ -1,10 +1,11 @@
 {
   "id":100,
+  "department": "Defra",
   "name":"CAP Delivery",
+  "agency": "Rural Payments Agency",
   "health": "Fair",
   "description": "Example description",
   "service_url" : "http://www.example.com",
-  "directorate": "Rural Payments Agency",
   "location": "Reading",
   "phase":"beta",
 
