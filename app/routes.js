@@ -13,19 +13,17 @@ var directorate_order = [
       'Cross Home Office'
     ];
 
-//var theme_order = [
-//    'Making decisions and issuing things',
-//    'Understanding what to do and communicating',
-//    'Monitoring, searching and anlysing data',
-//    'Getting permissions to do something',
-//    'Improving Home Office Digital'
-//]
-
 var priority_order = [
       'Top',
       'High',
       'Medium',
       'Low'
+    ];
+
+var health_order = [
+      'Good',
+      'Fair',
+      'Critical'
     ];
 
 var priority_descriptions = {
@@ -38,7 +36,7 @@ var priority_descriptions = {
 /*
   A way to force the ordering of the phases.
 */
-var phase_order = ['discovery','alpha','beta','live'];
+var phase_order = ['pipeline', 'discovery','alpha','beta','live'];
 
 /*
   A function to gather the data by
@@ -73,7 +71,7 @@ router.get('/', function (req, res)
     "data":new_data,
     "counts":phases,
     "view":"directorate",
-    "directorate_order":directorate_order,
+    "row_order":directorate_order,
     "phase_order":phase_order
     }
   );
@@ -99,7 +97,7 @@ router.get('/location/', function (req, res)
     "data":new_data,
     "counts":phases,
     "view":"location",
-    "directorate_order":loc_order,
+    "row_order":loc_order,
     "phase_order":phase_order
   });
 });
@@ -126,14 +124,34 @@ router.get('/theme/', function (req, res)
     "data":new_data,
     "counts":phases,
     "view":"theme",
-    "directorate_order":theme_order,
+    "row_order":theme_order,
     "phase_order":phase_order
   });
 });
 
 
 /*
-  - - - - - - - - - -  INDEX PAGE - - - - - - - - - -
+  - - - - - - - - - - HEALTH INDEX PAGE - - - - - - - - - -
+*/
+router.get('/health/', function (req, res)
+{
+  var data = _.groupBy(req.app.locals.data, 'health');
+  var new_data = indexify(data);
+
+  var phases = _.countBy(req.app.locals.data, 'phase');
+
+  res.render('index', {
+    "data":new_data,
+    "counts":phases,
+    "view":"health",
+    "row_order": health_order,
+    "phase_order":phase_order
+    }
+  );
+});
+
+/*
+  - - - - - - - - - - PRIORITY INDEX PAGE - - - - - - - - - -
 */
 router.get('/priority/', function (req, res)
 {
@@ -146,7 +164,7 @@ router.get('/priority/', function (req, res)
     "data":new_data,
     "counts":phases,
     "view":"priority",
-    "directorate_order":priority_order,
+    "row_order":priority_order,
     "phase_order":phase_order,
     "priority_descriptions":priority_descriptions
     }

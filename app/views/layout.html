@@ -2,6 +2,9 @@
 
 {% block head %} {% include "includes/head.html" %} {% endblock %}
 
-{% set global_header_text = "Home Office Digital Services" %}
+{% set global_header_text = "Gov Project Dashboard" %}
 
-{% block bodyEnd %} bodyEnd {% endblock %}
+{% block body_end %}
+  {% include "includes/scripts.html" %}
+  {# <script src="/public/javascripts/jquery-easing.js"></script> #}
+{% endblock %}

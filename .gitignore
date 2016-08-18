@@ -17,3 +17,5 @@ docs
 .tern-project
 *.zip
 .settings/
+/node_modules/
+/lib/

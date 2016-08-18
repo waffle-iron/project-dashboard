@@ -43,12 +43,24 @@
 				<p class="circle-label">{{ data.phase | title }}</p>
 			</div>
 
-			<h3 class="heading-small">Digital Sponsor</h3>
-			<p><a href="mailto:{{ data.sponsor_email | default('Not set') }}">{{ data.sponsor | default('Not set') }}</a></p>
+			{% if data["resources"] %}
+				<div class="grid-row">
+						<h2 class="heading-medium">Resources</h2>
+						 {% for resource in data["resources"] %}
+							<a href = "{{ resource['url'] }}">{{ resource["name"] }}</a><br/>
+						 {% endfor %}
+				</div>
+			{% endif %}
 
-			<h3 class="heading-small">Service Manager</h3>
-			<p>{{ data.service_man | default('Not set') }}</p>
+      {% if data.sponsor %}
+				<h3 class="heading-small">Digital Sponsor</h3>
+				<p><a href="mailto:{{ data.sponsor_email | default('Not set') }}">{{ data.sponsor | default('Not set') }}</a></p>
+			{% endif %}
 
+      {% if data.service_man %}
+				<h3 class="heading-small">Service Manager</h3>
+				<p>{{ data.service_man | default('Not set') }}</p>
+			{% endif %}
 
 			{% if data["open_source"] %}
 				<h3 class="heading-small">Components</h3>
@@ -58,15 +70,65 @@
 			{% endfor %}
 
 			{% if data["related_services"] %}
-			<h3 class="heading-small">Related Services</h3>
+				<h3 class="heading-small">Related Services</h3>
 			{% endif %}
 			<p>
 			{% for related_service in data["related_services"] %}
-			<a href = "/projects/{{ related_service['id'] }}/x">{{ related_service["name"] }}</a><br/>
+				<a href = "/projects/{{ related_service['id'] }}/x">{{ related_service["name"] }}</a><br/>
 			{% endfor %}
 			</p>
 		</section>
 	</div>
+	
+	<div class="grid-row">
+	
+	 {% macro peopleTable(peopleData) %}
+    <section class="column-half">
+      <h2 class="heading-medium">Kainos team</h2>
+        <div>
+          {% if data["ourTeam"] %}
+            <table>
+              <thead>
+                <td>Role</td>
+                <td>Name</td> 
+                <td><!-- column for "more" buttons --></td>
+              </thead>
+               {% for teamMember in peopleData %}
+               <tr>
+                 <td>{{ teamMember.role}}</td>
+                 <td>{{ teamMember.name }}</td>
+                 <td data-collapsable-parent="1">...</td>
+               </tr>
+               <tr>
+                 <td data-collapsable-child="1" colspan="3">
+                   <div class="grid-row">
+                     <section class="column-half">
+                       <p>Primary location: {{ teamMember.primaryLocation }} </p>
+                       {% if teamMember.secondaryLocation %}
+												 <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
+                       {% endif %}
+                     </section>
+                     <section class="column-half">
+                       {% if teamMember.email %}
+												 <p>Email: {{ teamMember.email}} </p>
+                       {% endif %}
+                       
+                       {% if teamMember.mobile %}
+                        <p>Mobile: {{ teamMember.mobile}} </p>
+                       {% endif %}
+                     </section>
+                   </div>
+                 </td>
+               </tr>
+               {% endfor %}
+            </table>
+          {% endif %}
+        </div>
+      </section>
+  {% endmacro %} 
+  
+  {{ peopleTable(data["ourTeam"]) }}
+  {{ peopleTable(data["clientTeam"]) }}
+	</div>	
 </main>
-
 {% endblock %}
