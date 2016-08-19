@@ -12,24 +12,35 @@ var path        = require('path'),
     port        = process.env.PORT || 3100,
     env         = process.env.NODE_ENV || 'development';
 
-/*
-  Load all the project data from the files.
-*/
-var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
-var files = fs.readdirSync(__dirname + '/lib/projects/');
-app.locals.data = [];
-_.each(files,function(el)
-{
-  if (el == 'defaults.json') return;
-  var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
-  try {
-    var json = merge(true,defaults,JSON.parse(file));
-    json.filename = el;
-    app.locals.data.push(json);
-  } catch(err) {
-    console.log(err);
+function requireHTTPS(req, res, next) {
+  // Heroku terminates SSL connections at the load balancer level, so req.secure will never be true
+  if (req.headers["x-forwarded-proto"] != "https") {
+    return res.redirect('https://' + req.hostname + req.url);
   }
-});
+  next();
+}
+if (env === 'production') {
+  app.use(requireHTTPS);
+}
+
+  /*
+  Load all the project data from the files.
+  */
+  var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
+  var files = fs.readdirSync(__dirname + '/lib/projects/');
+  app.locals.data = [];
+  _.each(files,function(el)
+  {
+    if (el == 'defaults.json') return;
+    var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
+    try {
+      var json = merge(true,defaults,JSON.parse(file));
+      json.filename = el;
+      app.locals.data.push(json);
+    } catch(err) {
+      console.log(err);
+    }
+  });
 
 // Application settings
 app.set('view engine', 'html');
@@ -42,11 +53,11 @@ app.use('/public', express.static(__dirname + '/govuk_modules/govuk_frontend_too
 app.use('/public/images/icons', express.static(__dirname + '/govuk_modules/govuk_frontend_toolkit/images'));
 
 nunjucks.setup({
-    autoescape: true,
-    watch: true
+  autoescape: true,
+  watch: true
 }, app, function(env) {
   env.addFilter('slugify', function(str) {
-      return str.replace(/[.,-\/#!$%\^&\*;:{}=\-_`~()’]/g,"").replace(/ +/g,'_').toLowerCase();
+    return str.replace(/[.,-\/#!$%\^&\*;:{}=\-_`~()’]/g,"").replace(/ +/g,'_').toLowerCase();
   });
 });
 
@@ -78,21 +89,21 @@ app.get(/^\/([^.]+)$/, function (req, res)
   // remove the trailing slash because it seems nunjucks doesn't expect it.
   if (path.substr(-1) === '/') path = path.substr(0, path.length - 1);
 
-	res.render(path, req.data, function(err, html)
+  res.render(path, req.data, function(err, html)
   {
-		if (err) {
-			res.render(path + "/index", req.data, function(err2, html)
-      {
-        if (err2) {
-          res.status(404).send(path+'<br />'+err+'<br />'+err2);
-        } else {
-          res.end(html);
-        }
-      });
-		} else {
-			res.end(html);
-		}
-	});
+    if (err) {
+     res.render(path + "/index", req.data, function(err2, html)
+     {
+      if (err2) {
+        res.status(404).send(path+'<br />'+err+'<br />'+err2);
+      } else {
+        res.end(html);
+      }
+    });
+   } else {
+     res.end(html);
+   }
+ });
 });
 
 // start the app

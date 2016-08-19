@@ -1,114 +1,134 @@
-var express = require('express'),
-    router  = express.Router(),
-    _       = require('underscore');
+var express   = require('express'),
+    router    = express.Router(),
+    fs        = require('fs'),
+    basicAuth = require('basic-auth'),
+    _         = require('underscore');
 
-/*
-  A way to force the ordering of the directorates.
-*/
-var directorate_order = [
-      'Border Force',
-      'Immigration Enforcement',
-      'UKVI',
-      "Her Majesty's Passport Office",
-      'Cross Home Office'
-    ];
+try {
+	var userFile = fs.readFileSync(__dirname + '/login-password.json').toString();
+	var storedUser = JSON.parse(userFile);
+} catch(err) {
+	console.log(err);
+}
 
-var priority_order = [
-      'Top',
-      'High',
-      'Medium',
-      'Low'
-    ];
+// Authorize all routes
+router.use(function (req, res, next) {	
+ function unauthorized(res) {
+   res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+   return res.send(401);
+ };
+ var user = basicAuth(req);
+ if (user && user.name && user.pass && 
+  user.name === storedUser.login && 
+  user.pass === storedUser.password) {
+  return next(); 
+} 
+return unauthorized(res);
+});
 
-var health_order = [
-      'Good',
-      'Fair',
-      'Critical'
-    ];
+  // A way to force the ordering of the directorates.
+  var directorate_order = [
+  'Border Force',
+  'Immigration Enforcement',
+  'UKVI',
+  "Her Majesty's Passport Office",
+  'Cross Home Office'
+  ];
 
-var priority_descriptions = {
-      "Top":"Helping people return to work through Border Force and solving urgent problems that affect the whole department.",
-      "High":"Helping people prepare for retirement and manage their debt.",
-      "Medium":"Helping people apply for and get existing products across the department.",
-      "Low":"Non-urgent services and those that have short-term benefit."
-    };
+  var priority_order = [
+  'Top',
+  'High',
+  'Medium',
+  'Low'
+  ];
 
-/*
-  A way to force the ordering of the phases.
-*/
-var phase_order = ['pipeline', 'discovery','alpha','beta','live'];
+  var health_order = [
+  'Good',
+  'Fair',
+  'Critical'
+  ];
 
-/*
+  var priority_descriptions = {
+    "Top":"Helping people return to work through Border Force and solving urgent problems that affect the whole department.",
+    "High":"Helping people prepare for retirement and manage their debt.",
+    "Medium":"Helping people apply for and get existing products across the department.",
+    "Low":"Non-urgent services and those that have short-term benefit."
+  };
+
+  // A way to force the ordering of the phases.
+  var phase_order = ['pipeline', 'discovery','alpha','beta','live'];
+
+  /*
   A function to gather the data by
   'phase' and then 'facing' so the
   index.html can spit them out.
-*/
-function indexify(data)
-{
-  var new_data = {};
-  _.each(data, function(value, key, list)
+  */
+  function indexify(data)
   {
-    var item = _.groupBy(value,'phase');
-    new_data[key] = {};
-    _.each(item, function(v,k,l)
+    var new_data = {};
+    _.each(data, function(value, key, list)
     {
-      var piece = _.groupBy(v,'facing');
-      new_data[key][k] = piece;
+      var item = _.groupBy(value,'phase');
+      new_data[key] = {};
+      _.each(item, function(v,k,l)
+      {
+        var piece = _.groupBy(v,'facing');
+        new_data[key][k] = piece;
+      });
+    });
+    return new_data;
+  }
+
+  /*
+  - - - - - - - - - -  INDEX PAGE - - - - - - - - - -
+  */
+  router.get('/', function (req, res)
+  {
+    var data = _.groupBy(req.app.locals.data, 'directorate');
+    var new_data = indexify(data);
+    var phases = _.countBy(req.app.locals.data, 'phase');
+    res.render('index', {
+      "data":new_data,
+      "counts":phases,
+      "view":"directorate",
+      "row_order":directorate_order,
+      "phase_order":phase_order
+    }
+    );
+  });
+
+  /*
+  - - - - - - - - - -  LOCATION INDEX PAGE - - - - - - - - - -
+  */
+  router.get('/location/', function (req, res)
+  {
+    var data = _.groupBy(req.app.locals.data, 'location');
+    var new_data = indexify(data);
+
+    var loc_order = [];
+    _.each(data, function(value, key, list)
+    {
+      loc_order.push(key);
+    });
+    loc_order.sort();
+
+    var phases = _.countBy(req.app.locals.data, 'phase');
+    res.render('index', {
+      "data":new_data,
+      "counts":phases,
+      "view":"location",
+      "row_order":loc_order,
+      "phase_order":phase_order
     });
   });
-  return new_data;
-}
-
-/*
-  - - - - - - - - - -  INDEX PAGE - - - - - - - - - -
-*/
-router.get('/', function (req, res)
-{
-  var data = _.groupBy(req.app.locals.data, 'directorate');
-  var new_data = indexify(data);
-  var phases = _.countBy(req.app.locals.data, 'phase');
-  res.render('index', {
-    "data":new_data,
-    "counts":phases,
-    "view":"directorate",
-    "row_order":directorate_order,
-    "phase_order":phase_order
-    }
-  );
-});
-
-/*
-  - - - - - - - - - -  LOCATION INDEX PAGE - - - - - - - - - -
-*/
-router.get('/location/', function (req, res)
-{
-  var data = _.groupBy(req.app.locals.data, 'location');
-  var new_data = indexify(data);
-
-  var loc_order = [];
-  _.each(data, function(value, key, list)
-  {
-    loc_order.push(key);
-  });
-  loc_order.sort();
-
-  var phases = _.countBy(req.app.locals.data, 'phase');
-  res.render('index', {
-    "data":new_data,
-    "counts":phases,
-    "view":"location",
-    "row_order":loc_order,
-    "phase_order":phase_order
-  });
-});
 
 
 
-/*
+  /*
  - - - - - - - - - -  THEME INDEX PAGE - - - - - - - - - -
  */
-router.get('/theme/', function (req, res)
-{
+ router.get('/theme/', function (req, res)
+ {
   var data = _.groupBy(req.app.locals.data, 'theme');
   var new_data = indexify(data);
 
@@ -130,92 +150,92 @@ router.get('/theme/', function (req, res)
 });
 
 
-/*
+  /*
   - - - - - - - - - - HEALTH INDEX PAGE - - - - - - - - - -
-*/
-router.get('/health/', function (req, res)
-{
-  var data = _.groupBy(req.app.locals.data, 'health');
-  var new_data = indexify(data);
-
-  var phases = _.countBy(req.app.locals.data, 'phase');
-
-  res.render('index', {
-    "data":new_data,
-    "counts":phases,
-    "view":"health",
-    "row_order": health_order,
-    "phase_order":phase_order
-    }
-  );
-});
-
-/*
-  - - - - - - - - - - PRIORITY INDEX PAGE - - - - - - - - - -
-*/
-router.get('/priority/', function (req, res)
-{
-  var data = _.groupBy(req.app.locals.data, 'priority');
-  var new_data = indexify(data);
-
-  var phases = _.countBy(req.app.locals.data, 'phase');
-
-  res.render('index', {
-    "data":new_data,
-    "counts":phases,
-    "view":"priority",
-    "row_order":priority_order,
-    "phase_order":phase_order,
-    "priority_descriptions":priority_descriptions
-    }
-  );
-});
-
-/*
-  - - - - - - - - - -  PROJECT PAGE - - - - - - - - - -
-*/
-router.get('/projects/:id/:slug', function (req, res)
-{
-  var data = _.findWhere(req.app.locals.data, {id:parseInt(req.params.id)});
-  res.render('project', {
-    "data":data,
-    "phase_order":phase_order,
-  });
-});
-
-/*
-  - - - - - - - - - -  PROTOTYPE REDRIECT - - - - - - - - - -
-*/
-router.get('/projects/:id/:slug/prototype', function (req, res)
-{
-  var id = req.params.id;
-  var data = _.findWhere(req.app.locals.data, {id:parseInt(id)});
-  if (typeof data.prototype == 'undefined')
+  */
+  router.get('/health/', function (req, res)
   {
-    res.render('no-prototype',{
+    var data = _.groupBy(req.app.locals.data, 'health');
+    var new_data = indexify(data);
+
+    var phases = _.countBy(req.app.locals.data, 'phase');
+
+    res.render('index', {
+      "data":new_data,
+      "counts":phases,
+      "view":"health",
+      "row_order": health_order,
+      "phase_order":phase_order
+    }
+    );
+  });
+
+  /*
+  - - - - - - - - - - PRIORITY INDEX PAGE - - - - - - - - - -
+  */
+  router.get('/priority/', function (req, res)
+  {
+    var data = _.groupBy(req.app.locals.data, 'priority');
+    var new_data = indexify(data);
+
+    var phases = _.countBy(req.app.locals.data, 'phase');
+
+    res.render('index', {
+      "data":new_data,
+      "counts":phases,
+      "view":"priority",
+      "row_order":priority_order,
+      "phase_order":phase_order,
+      "priority_descriptions":priority_descriptions
+    }
+    );
+  });
+
+  /*
+  - - - - - - - - - -  PROJECT PAGE - - - - - - - - - -
+  */
+  router.get('/projects/:id/:slug', function (req, res)
+  {
+    var data = _.findWhere(req.app.locals.data, {id:parseInt(req.params.id)});
+    res.render('project', {
       "data":data,
+      "phase_order":phase_order,
     });
-  } else {
-    res.redirect(data.prototype);
-  }
-});
+  });
 
-/*
+  /*
+  - - - - - - - - - -  PROTOTYPE REDRIECT - - - - - - - - - -
+  */
+  router.get('/projects/:id/:slug/prototype', function (req, res)
+  {
+    var id = req.params.id;
+    var data = _.findWhere(req.app.locals.data, {id:parseInt(id)});
+    if (typeof data.prototype == 'undefined')
+    {
+      res.render('no-prototype',{
+        "data":data,
+      });
+    } else {
+      res.redirect(data.prototype);
+    }
+  });
+
+  /*
   - - - - - - - - - -  ALL THE DATA AS JSON - - - - - - - - - -
-*/
+  */
 
-router.get('/api', function (req, res) {
-  console.log(req.app.locals.data);
-  res.json(req.app.locals.data);
-});
+  router.get('/api', function (req, res) {
+    console.log(req.app.locals.data);
+    res.json(req.app.locals.data);
+  });
 
-router.get('/api/:id', function (req, res) {
-  var data = _.findWhere(req.app.locals.data, {id: (parseInt(req.params.id))});
-  if (data) {
-    res.json(data);
-  } else {
-    res.json({error: 'ID not found'});
-  }
-});
+  router.get('/api/:id', function (req, res) {
+    var data = _.findWhere(req.app.locals.data, {id: (parseInt(req.params.id))});
+    if (data) {
+      res.json(data);
+    } else {
+      res.json({error: 'ID not found'});
+    }
+  });
 
-module.exports = router;
+  module.exports = router;
