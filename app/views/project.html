@@ -43,6 +43,13 @@
 				<p class="circle-label">{{ data.phase | title }}</p>
 			</div>
 
+      {% if data["health"] %}
+        <div class="grid-row">
+            <h2 class="heading-medium">Health</h2>
+              <div>{{ data.health }}</div>
+        </div>
+      {% endif %}
+
 			{% if data["resources"] %}
 				<div class="grid-row">
 						<h2 class="heading-medium">Resources</h2>
@@ -116,6 +123,15 @@
                        {% if teamMember.mobile %}
                         <p>Mobile: {{ teamMember.mobile}} </p>
                        {% endif %}
+
+                       {% if teamMember.slack %}
+                        <p>Slack: {{ teamMember.slack}} </p>
+                       {% endif %}
+
+                       {% if teamMember.skype %}
+                        <p>Skype: {{ teamMember.skype }} </p>
+                       {% endif %}
+
                      </section>
                    </div>
                  </td>
