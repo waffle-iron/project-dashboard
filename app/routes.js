@@ -18,11 +18,10 @@ router.use(function (req, res, next) {
 	    return res.send(401);
 	  };
 	  var user = basicAuth(req);
-	  if (!user || !user.name || !user.pass) {
-	    return unauthorized(res);
-	  };
-	  if (user.name === storedUser.login && user.pass === storedUser.password) {
-		return next();
+    if (user && user.name && user.pass && 
+        user.name === storedUser.login && 
+        user.pass === storedUser.password) {
+      return next(); 
 	  } 
 	  return unauthorized(res);
 });
