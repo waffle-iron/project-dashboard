@@ -1,6 +1,4 @@
-server.crt
-server.csr
-server.key
+.env
 .sass-cache
 .DS_Store
 .start.pid

@@ -12,6 +12,17 @@ var path        = require('path'),
     port        = process.env.PORT || 3100,
     env         = process.env.NODE_ENV || 'development';
 
+function requireHTTPS(req, res, next) {
+  // Heroku terminates SSL connections at the load balancer level, so req.secure will never be true
+  if (req.headers["x-forwarded-proto"] != "https") {
+      return res.redirect('https://' + req.hostname + req.url);
+  }
+  next();
+}
+if (env === 'production') {
+  app.use(requireHTTPS);
+}
+
 /*
   Load all the project data from the files.
 */

@@ -1,8 +1,8 @@
-var express 	= require('express'),
-    router  	= express.Router(),
-    fs          = require('fs'),
-	basicAuth 	= require('basic-auth'),
-    _       	= require('underscore');
+var express   = require('express'),
+    router    = express.Router(),
+    fs        = require('fs'),
+    basicAuth = require('basic-auth'),
+    _         = require('underscore');
 
 try {
 	var userFile = fs.readFileSync(__dirname + '/login-password.json').toString();
