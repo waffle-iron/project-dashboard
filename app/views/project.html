@@ -1,95 +1,95 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-	GOV.UK prototyping kit
+  GOV.UK prototyping kit
 {% endblock %}
 
 {% block content %}
 
 <main id="content" role="main">
 
-	<h1 class="heading-xlarge" style="margin-bottom:15px;">{{ data.name }}</h1>
+  <h1 class="heading-xlarge" style="margin-bottom:15px;">{{ data.name }}</h1>
 
-	<div class="grid-row">
-		<section class="column-two-thirds">
+  <div class="grid-row">
+    <section class="column-two-thirds">
 
-			{% if data["service_url"] %}
-				<p><a href = "{{ data.service_url }}">{{ data.service_url }}</a></p>
-			{% endif %}
+      {% if data["service_url"] %}
+        <p><a href = "{{ data.service_url }}">{{ data.service_url }}</a></p>
+      {% endif %}
 
-			<p>{{ data.description }}</p>
+      <p>{{ data.description }}</p>
 
-			<div class="location">Based in <strong>{{ data.location }}</strong></div>
+      <div class="location">Based in <strong>{{ data.location }}</strong></div>
 
-			<h2 class="heading-medium">Project history</h2>
-			<div class="phase-history">
-				{% for phase in phase_order %}
-					{% if data["phase-history"][phase].length %}
-					<div class="phase-history-item border-{{phase}} txt-{{phase}}">
-						<h3><a href="#" class="tag tag-history {{phase}}">{{phase}}</a></h3>
-						{% for item in data["phase-history"][phase] %}
-							<p>{{ item.label }} &mdash; {{item.date}}</p>
-						{% endfor %}
-					</div>
-					{% endif %}
-				{% endfor %}
-			</div>
-		</section>
-		<section class="column-third">
+      <h2 class="heading-medium">Project history</h2>
+      <div class="phase-history">
+        {% for phase in phase_order %}
+          {% if data["phase-history"][phase].length %}
+          <div class="phase-history-item border-{{phase}} txt-{{phase}}">
+            <h3><a href="#" class="tag tag-history {{phase}}">{{phase}}</a></h3>
+            {% for item in data["phase-history"][phase] %}
+              <p>{{ item.label }} &mdash; {{item.date}}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+    <section class="column-third">
 
-			<div class="phase-circle">
-				<p class="circle {{ data.phase | lower }}"></p>
-				{% if data.phase_modifier %}<p class="phase_modifier">{{ data.phase_modifier }}</p>{% endif %}
-				<p class="circle-label">{{ data.phase | title }}</p>
-			</div>
+      <div class="phase-circle">
+        <p class="circle {{ data.phase | lower }}"></p>
+        {% if data.phase_modifier %}<p class="phase_modifier">{{ data.phase_modifier }}</p>{% endif %}
+        <p class="circle-label">{{ data.phase | title }}</p>
+      </div>
 
       {% if data["health"] %}
         <div class="grid-row">
             <h2 class="heading-medium">Health</h2>
-              <div>{{ data.health }}</div>
+            <div>{{ data.health }}</div>
         </div>
       {% endif %}
 
-			{% if data["resources"] %}
-				<div class="grid-row">
-						<h2 class="heading-medium">Resources</h2>
-						 {% for resource in data["resources"] %}
-							<a href = "{{ resource['url'] }}">{{ resource["name"] }}</a><br/>
-						 {% endfor %}
-				</div>
-			{% endif %}
+      {% if data["resources"] %}
+        <div class="grid-row">
+            <h2 class="heading-medium">Resources</h2>
+             {% for resource in data["resources"] %}
+              <a href = "{{ resource['url'] }}">{{ resource["name"] }}</a><br/>
+             {% endfor %}
+        </div>
+      {% endif %}
 
       {% if data.sponsor %}
-				<h3 class="heading-small">Digital Sponsor</h3>
-				<p><a href="mailto:{{ data.sponsor_email | default('Not set') }}">{{ data.sponsor | default('Not set') }}</a></p>
-			{% endif %}
+        <h3 class="heading-small">Digital Sponsor</h3>
+        <p><a href="mailto:{{ data.sponsor_email | default('Not set') }}">{{ data.sponsor | default('Not set') }}</a></p>
+      {% endif %}
 
       {% if data.service_man %}
-				<h3 class="heading-small">Service Manager</h3>
-				<p>{{ data.service_man | default('Not set') }}</p>
-			{% endif %}
+        <h3 class="heading-small">Service Manager</h3>
+        <p>{{ data.service_man | default('Not set') }}</p>
+      {% endif %}
 
-			{% if data["open_source"] %}
-				<h3 class="heading-small">Components</h3>
-			{% endif %}
-			{% for open_source in data["open_source"] %}
-				<p><a href = "{{ open_source['url'] }}">{{ open_source["name"] }}</a></p>
-			{% endfor %}
+      {% if data["open_source"] %}
+        <h3 class="heading-small">Components</h3>
+      {% endif %}
+      {% for open_source in data["open_source"] %}
+        <p><a href = "{{ open_source['url'] }}">{{ open_source["name"] }}</a></p>
+      {% endfor %}
 
-			{% if data["related_services"] %}
-				<h3 class="heading-small">Related Services</h3>
-			{% endif %}
-			<p>
-			{% for related_service in data["related_services"] %}
-				<a href = "/projects/{{ related_service['id'] }}/x">{{ related_service["name"] }}</a><br/>
-			{% endfor %}
-			</p>
-		</section>
-	</div>
-	
-	<div class="grid-row">
-	
-	 {% macro peopleTable(peopleData) %}
+      {% if data["related_services"] %}
+        <h3 class="heading-small">Related Services</h3>
+      {% endif %}
+      <p>
+      {% for related_service in data["related_services"] %}
+        <a href = "/projects/{{ related_service['id'] }}/x">{{ related_service["name"] }}</a><br/>
+      {% endfor %}
+      </p>
+    </section>
+  </div>
+  
+  <div class="grid-row">
+  
+   {% macro peopleTable(peopleData) %}
     <section class="column-half">
       <h2 class="heading-medium">Kainos team</h2>
         <div>
@@ -112,12 +112,12 @@
                      <section class="column-half">
                        <p>Primary location: {{ teamMember.primaryLocation }} </p>
                        {% if teamMember.secondaryLocation %}
-												 <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
+                         <p>Secondary location: {{ teamMember.secondaryLocation}} </p>
                        {% endif %}
                      </section>
                      <section class="column-half">
                        {% if teamMember.email %}
-												 <p>Email: {{ teamMember.email}} </p>
+                         <p>Email: {{ teamMember.email}} </p>
                        {% endif %}
                        
                        {% if teamMember.mobile %}
@@ -131,7 +131,6 @@
                        {% if teamMember.skype %}
                         <p>Skype: {{ teamMember.skype }} </p>
                        {% endif %}
-
                      </section>
                    </div>
                  </td>
@@ -145,6 +144,6 @@
   
   {{ peopleTable(data["ourTeam"]) }}
   {{ peopleTable(data["clientTeam"]) }}
-	</div>	
+  </div>  
 </main>
 {% endblock %}
