@@ -79,7 +79,7 @@ return unauthorized(res);
   // If phaseName was provided, trim projects that don't belong to that phase 
   // Otherwise return unmodified data
   function filterPhaseIfPresent(data, phaseName){
-    if(typeof phaseName !== "undefined") {
+    if(typeof phaseName !== "undefined" && phaseName !== "all") {
       data = _.where(data, {"phase": phaseName})
     }
     return data;
@@ -107,7 +107,7 @@ return unauthorized(res);
   /*
   - - - - - - - - - -  LOCATION INDEX PAGE - - - - - - - - - -
   */
-  router.get('/', function (req, res)
+  router.get(['/','/location'], function (req, res)
   {
     var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
     data = _.groupBy(data, 'location');
@@ -123,6 +123,7 @@ return unauthorized(res);
     var phases = _.countBy(req.app.locals.data, 'phase');
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
       "view":"location",
       "row_order":loc_order,

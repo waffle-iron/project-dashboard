@@ -4,6 +4,9 @@
 // Take a look at patterns.scss to see which files are imported.
 @import 'patterns';
 
+$pipeline-colour: $purple;
+$discovery-colour: #34a1ff;
+
 #global-header #logo {
   font-size:16px;line-height:1.8;padding-left:5px;
   @media (min-width:480px) {font-size:19px; line-height:30px}
@@ -29,8 +32,6 @@
   #global-header .header-wrapper .header-global .header-logo {width:100%;}
 }
 #footer {display:none}
-
-$pipeline-colour: $purple;
 
 /*
   Top of the page phase banner bits.
