@@ -96,6 +96,7 @@ return unauthorized(res);
     var phases = _.countBy(req.app.locals.data, 'phase');
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
       "view":"directorate",
       "row_order":directorate_order,
@@ -152,6 +153,7 @@ return unauthorized(res);
   var phases = _.countBy(req.app.locals.data, 'phase');
   res.render('index', {
     "data":new_data,
+    "phase": req.query.phase,
     "counts":phases,
     "view":"theme",
     "row_order":theme_order,
@@ -172,6 +174,7 @@ return unauthorized(res);
 
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
       "view":"health",
       "row_order": health_order,
@@ -192,6 +195,7 @@ return unauthorized(res);
 
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
       "view":"priority",
       "row_order":priority_order,
