@@ -43,6 +43,11 @@ $pipeline-colour: $purple;
   text-decoration:none;
   text-transform:uppercase;
 }
+
+.tag:hover {
+  text-decoration: underline;
+}
+
 .tag.pipeline   {background-color:$pipeline-colour}
 .tag.discovery {background-color:$discovery-colour;}
 .tag.alpha     {background-color:$alpha-colour;}
@@ -54,6 +59,11 @@ $pipeline-colour: $purple;
   font-weight:700;
   text-align:center;
 }
+
+.big_number:hover {
+  text-decoration: underline;
+}
+
 /*
   Convienience classes for colouring text.
 */

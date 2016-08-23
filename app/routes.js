@@ -49,9 +49,6 @@ return unauthorized(res);
   ];
 
   var priority_descriptions = {
-    "Top":"Helping people return to work through Border Force and solving urgent problems that affect the whole department.",
-    "High":"Helping people prepare for retirement and manage their debt.",
-    "Medium":"Helping people apply for and get existing products across the department.",
     "Low":"Non-urgent services and those that have short-term benefit."
   };
 
@@ -79,12 +76,22 @@ return unauthorized(res);
     return new_data;
   }
 
+  // If phaseName was provided, trim projects that don't belong to that phase 
+  // Otherwise return unmodified data
+  function filterPhaseIfPresent(data, phaseName){
+    if(typeof phaseName !== "undefined") {
+      data = _.where(data, {"phase": phaseName})
+    }
+    return data;
+  }
+
   /*
-  - - - - - - - - - -  INDEX PAGE - - - - - - - - - -
+  - - - - - - - - - -  DIRECTORATE INDEX PAGE - - - - - - - - - -
   */
-  router.get('/', function (req, res)
+  router.get('/directorate', function (req, res)
   {
-    var data = _.groupBy(req.app.locals.data, 'directorate');
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'directorate');
     var new_data = indexify(data);
     var phases = _.countBy(req.app.locals.data, 'phase');
     res.render('index', {
@@ -100,9 +107,10 @@ return unauthorized(res);
   /*
   - - - - - - - - - -  LOCATION INDEX PAGE - - - - - - - - - -
   */
-  router.get('/location/', function (req, res)
+  router.get('/', function (req, res)
   {
-    var data = _.groupBy(req.app.locals.data, 'location');
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'location');
     var new_data = indexify(data);
 
     var loc_order = [];
@@ -129,7 +137,8 @@ return unauthorized(res);
  */
  router.get('/theme/', function (req, res)
  {
-  var data = _.groupBy(req.app.locals.data, 'theme');
+  var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+  data = _.groupBy(data, 'theme');
   var new_data = indexify(data);
 
   var theme_order = [];
@@ -155,9 +164,9 @@ return unauthorized(res);
   */
   router.get('/health/', function (req, res)
   {
-    var data = _.groupBy(req.app.locals.data, 'health');
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'health');
     var new_data = indexify(data);
-
     var phases = _.countBy(req.app.locals.data, 'phase');
 
     res.render('index', {
@@ -175,9 +184,9 @@ return unauthorized(res);
   */
   router.get('/priority/', function (req, res)
   {
-    var data = _.groupBy(req.app.locals.data, 'priority');
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'priority');
     var new_data = indexify(data);
-
     var phases = _.countBy(req.app.locals.data, 'phase');
 
     res.render('index', {
