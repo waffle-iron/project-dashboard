@@ -117,7 +117,7 @@
                      </section>
                      <section class="column-half">
                        {% if teamMember.email %}
-                         <p>Email: {{ teamMember.email}} </p>
+                         <p>Email: <a href="mailto:{{ teamMember.email }}">{{ teamMember.email }}</a></p>
                        {% endif %}
                        
                        {% if teamMember.mobile %}
