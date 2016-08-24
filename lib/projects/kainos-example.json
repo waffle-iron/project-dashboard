@@ -1,11 +1,13 @@
 {
   "id":101,
-  "name": "Project title",
+  "name": "Example Project",
   "department": "Department",
   "agency": "Agency (if applicable)",
   "phase": "pipeline",
-  "health": "Good",
+  "health": "Critical",
+  "priority": "Low",
   "service_url" : "http://www.example.com",
+  "location": "Gdańsk",
 
   "phase-history":{
     "pipeline": [

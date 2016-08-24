@@ -2,8 +2,8 @@
   "id":0,
   "name":"Name Of Project",
   "description": "Description of project",
-  "directorate": "Cross Home Office",
-  "location": "Leeds",
+  "agency": "",
+  "location": "Unknown",
   "phase":"discovery",
   "phase-history":{
     "discovery": [
@@ -20,5 +20,5 @@
     ]
   },
   "facing":"user",
-  "priority":"medium"
+  "priority":"Low"
 }
