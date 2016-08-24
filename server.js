@@ -29,8 +29,7 @@ if (env === 'production') {
   var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
   var files = fs.readdirSync(__dirname + '/lib/projects/');
   app.locals.data = [];
-  _.each(files,function(el)
-  {
+  _.each(files,function(el) {
     if (el == 'defaults.json') return;
     var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
     try {
@@ -89,11 +88,9 @@ app.get(/^\/([^.]+)$/, function (req, res)
   // remove the trailing slash because it seems nunjucks doesn't expect it.
   if (path.substr(-1) === '/') path = path.substr(0, path.length - 1);
 
-  res.render(path, req.data, function(err, html)
-  {
+  res.render(path, req.data, function(err, html) {
     if (err) {
-     res.render(path + "/index", req.data, function(err2, html)
-     {
+     res.render(path + "/index", req.data, function(err2, html) {
       if (err2) {
         res.status(404).send(path+'<br />'+err+'<br />'+err2);
       } else {
@@ -111,8 +108,7 @@ if (env === 'production') {
   app.listen(port);
 } else {
   // for development use browserSync as well
-  app.listen(port,function()
-  {
+  app.listen(port,function() {
     browserSync({
       proxy:'localhost:'+port,
       files:['public/**/*.{js,css}','app/views/**/*.html'],

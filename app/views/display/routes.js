@@ -2,8 +2,7 @@ var express     = require('express'),
     _           = require("underscore"),
     router      = express.Router();
 
-router.get('/display/:number?/:location?', function(req,res,next)
-{
+router.get('/display/:number?/:location?', function(req,res,next) {
   req.data = {};
 
   // Grab number from URL. 0 is default.
@@ -19,8 +18,7 @@ router.get('/display/:number?/:location?', function(req,res,next)
   });
 
   // if we've got a location filter the data.
-  if (location)
-  {
+  if (location) {
     data = _.filter(data, function(el) {
       return (el.location.toLowerCase() == location.toLowerCase());
     });

@@ -26,15 +26,6 @@ router.use(function (req, res, next) {
 return unauthorized(res);
 });
 
-  // A way to force the ordering of the directorates.
-  var directorate_order = [
-  'Border Force',
-  'Immigration Enforcement',
-  'UKVI',
-  "Her Majesty's Passport Office",
-  'Cross Home Office'
-  ];
-
   var priority_order = [
   'Top',
   'High',
@@ -49,9 +40,6 @@ return unauthorized(res);
   ];
 
   var priority_descriptions = {
-    "Top":"Helping people return to work through Border Force and solving urgent problems that affect the whole department.",
-    "High":"Helping people prepare for retirement and manage their debt.",
-    "Medium":"Helping people apply for and get existing products across the department.",
     "Low":"Non-urgent services and those that have short-term benefit."
   };
 
@@ -63,15 +51,12 @@ return unauthorized(res);
   'phase' and then 'facing' so the
   index.html can spit them out.
   */
-  function indexify(data)
-  {
+  function indexify(data) {
     var new_data = {};
-    _.each(data, function(value, key, list)
-    {
+    _.each(data, function(value, key, list) {
       var item = _.groupBy(value,'phase');
       new_data[key] = {};
-      _.each(item, function(v,k,l)
-      {
+      _.each(item, function(v,k,l) {
         var piece = _.groupBy(v,'facing');
         new_data[key][k] = piece;
       });
@@ -79,19 +64,36 @@ return unauthorized(res);
     return new_data;
   }
 
+  // If phaseName was provided, trim projects that don't belong to that phase 
+  // Otherwise return unmodified data
+  function filterPhaseIfPresent(data, phaseName){
+    if(typeof phaseName !== "undefined" && phaseName !== "all") {
+      data = _.where(data, {"phase": phaseName})
+    }
+    return data;
+  }
+
   /*
-  - - - - - - - - - -  INDEX PAGE - - - - - - - - - -
+  - - - - - - - - - -  agency INDEX PAGE - - - - - - - - - -
   */
-  router.get('/', function (req, res)
-  {
-    var data = _.groupBy(req.app.locals.data, 'directorate');
+  router.get('/agency', function (req, res) {
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'agency');
     var new_data = indexify(data);
     var phases = _.countBy(req.app.locals.data, 'phase');
+
+    var agency_order = [];
+    _.each(data, function(value, key, list) {
+      agency_order.push(key);
+    });
+    agency_order.sort();
+
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
-      "view":"directorate",
-      "row_order":directorate_order,
+      "view":"agency",
+      "row_order":agency_order,
       "phase_order":phase_order
     }
     );
@@ -100,14 +102,13 @@ return unauthorized(res);
   /*
   - - - - - - - - - -  LOCATION INDEX PAGE - - - - - - - - - -
   */
-  router.get('/location/', function (req, res)
-  {
-    var data = _.groupBy(req.app.locals.data, 'location');
+  router.get(['/','/location'], function (req, res) {
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'location');
     var new_data = indexify(data);
 
     var loc_order = [];
-    _.each(data, function(value, key, list)
-    {
+    _.each(data, function(value, key, list) {
       loc_order.push(key);
     });
     loc_order.sort();
@@ -115,6 +116,7 @@ return unauthorized(res);
     var phases = _.countBy(req.app.locals.data, 'phase');
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
       "view":"location",
       "row_order":loc_order,
@@ -127,14 +129,13 @@ return unauthorized(res);
   /*
  - - - - - - - - - -  THEME INDEX PAGE - - - - - - - - - -
  */
- router.get('/theme/', function (req, res)
- {
-  var data = _.groupBy(req.app.locals.data, 'theme');
+ router.get('/theme/', function (req, res) {
+  var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+  data = _.groupBy(data, 'theme');
   var new_data = indexify(data);
 
   var theme_order = [];
-  _.each(data, function(value, key, list)
-  {
+  _.each(data, function(value, key, list) {
     theme_order.push(key);
   });
   theme_order.sort();
@@ -142,6 +143,7 @@ return unauthorized(res);
   var phases = _.countBy(req.app.locals.data, 'phase');
   res.render('index', {
     "data":new_data,
+    "phase": req.query.phase,
     "counts":phases,
     "view":"theme",
     "row_order":theme_order,
@@ -153,15 +155,15 @@ return unauthorized(res);
   /*
   - - - - - - - - - - HEALTH INDEX PAGE - - - - - - - - - -
   */
-  router.get('/health/', function (req, res)
-  {
-    var data = _.groupBy(req.app.locals.data, 'health');
+  router.get('/health/', function (req, res) {
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'health');
     var new_data = indexify(data);
-
     var phases = _.countBy(req.app.locals.data, 'phase');
 
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
       "view":"health",
       "row_order": health_order,
@@ -173,15 +175,15 @@ return unauthorized(res);
   /*
   - - - - - - - - - - PRIORITY INDEX PAGE - - - - - - - - - -
   */
-  router.get('/priority/', function (req, res)
-  {
-    var data = _.groupBy(req.app.locals.data, 'priority');
+  router.get('/priority/', function (req, res) {
+    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+    data = _.groupBy(data, 'priority');
     var new_data = indexify(data);
-
     var phases = _.countBy(req.app.locals.data, 'phase');
 
     res.render('index', {
       "data":new_data,
+      "phase": req.query.phase,
       "counts":phases,
       "view":"priority",
       "row_order":priority_order,
@@ -194,8 +196,7 @@ return unauthorized(res);
   /*
   - - - - - - - - - -  PROJECT PAGE - - - - - - - - - -
   */
-  router.get('/projects/:id/:slug', function (req, res)
-  {
+  router.get('/projects/:id/:slug', function (req, res) {
     var data = _.findWhere(req.app.locals.data, {id:parseInt(req.params.id)});
     res.render('project', {
       "data":data,
@@ -206,12 +207,10 @@ return unauthorized(res);
   /*
   - - - - - - - - - -  PROTOTYPE REDRIECT - - - - - - - - - -
   */
-  router.get('/projects/:id/:slug/prototype', function (req, res)
-  {
+  router.get('/projects/:id/:slug/prototype', function (req, res) {
     var id = req.params.id;
     var data = _.findWhere(req.app.locals.data, {id:parseInt(id)});
-    if (typeof data.prototype == 'undefined')
-    {
+    if (typeof data.prototype == 'undefined') {
       res.render('no-prototype',{
         "data":data,
       });

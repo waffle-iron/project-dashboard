@@ -4,6 +4,9 @@
 // Take a look at patterns.scss to see which files are imported.
 @import 'patterns';
 
+$pipeline-colour: $purple;
+$discovery-colour: #34a1ff;
+
 #global-header #logo {
   font-size:16px;line-height:1.8;padding-left:5px;
   @media (min-width:480px) {font-size:19px; line-height:30px}
@@ -30,8 +33,6 @@
 }
 #footer {display:none}
 
-$pipeline-colour: $purple;
-
 /*
   Top of the page phase banner bits.
 */
@@ -43,6 +44,11 @@ $pipeline-colour: $purple;
   text-decoration:none;
   text-transform:uppercase;
 }
+
+.tag:hover {
+  text-decoration: underline;
+}
+
 .tag.pipeline   {background-color:$pipeline-colour}
 .tag.discovery {background-color:$discovery-colour;}
 .tag.alpha     {background-color:$alpha-colour;}
@@ -54,6 +60,11 @@ $pipeline-colour: $purple;
   font-weight:700;
   text-align:center;
 }
+
+.big_number:hover {
+  text-decoration: underline;
+}
+
 /*
   Convienience classes for colouring text.
 */
