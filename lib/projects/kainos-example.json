@@ -5,7 +5,9 @@
   "agency": "Agency (if applicable)",
   "phase": "pipeline",
   "health": "Good",
+  "priority": "Low",
   "service_url" : "http://www.example.com",
+  "location": "Gdańsk",
 
   "phase-history":{
     "pipeline": [
