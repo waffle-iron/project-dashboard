@@ -26,15 +26,6 @@ router.use(function (req, res, next) {
 return unauthorized(res);
 });
 
-  // A way to force the ordering of the directorates.
-  var directorate_order = [
-  'Border Force',
-  'Immigration Enforcement',
-  'UKVI',
-  "Her Majesty's Passport Office",
-  'Cross Home Office'
-  ];
-
   var priority_order = [
   'Top',
   'High',
@@ -86,20 +77,28 @@ return unauthorized(res);
   }
 
   /*
-  - - - - - - - - - -  DIRECTORATE INDEX PAGE - - - - - - - - - -
+  - - - - - - - - - -  agency INDEX PAGE - - - - - - - - - -
   */
-  router.get('/directorate', function (req, res)
+  router.get('/agency', function (req, res)
   {
     var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
-    data = _.groupBy(data, 'directorate');
+    data = _.groupBy(data, 'agency');
     var new_data = indexify(data);
     var phases = _.countBy(req.app.locals.data, 'phase');
+
+    var agency_order = [];
+    _.each(data, function(value, key, list)
+    {
+      agency_order.push(key);
+    });
+    agency_order.sort();
+
     res.render('index', {
       "data":new_data,
       "phase": req.query.phase,
       "counts":phases,
-      "view":"directorate",
-      "row_order":directorate_order,
+      "view":"agency",
+      "row_order":agency_order,
       "phase_order":phase_order
     }
     );
