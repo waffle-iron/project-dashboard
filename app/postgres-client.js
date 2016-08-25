@@ -2,7 +2,7 @@ var pg      = require('pg'),
     fs      = require('fs'),
     merge   = require('merge'),
     _       = require('underscore');
-    
+
 pg.defaults.ssl = true;
 
 pg.connect(process.env.DATABASE_URL, function(err, dbClient) {
@@ -11,15 +11,29 @@ pg.connect(process.env.DATABASE_URL, function(err, dbClient) {
 
   dbClient.query(`
     DROP TABLE IF EXISTS projects;
-  `);
-
-  dbClient.query(`
     CREATE TABLE projects (
-      name    varchar(128),
-      agency  varchar(128) 
+      id            SERIAL PRIMARY KEY,
+      -- phase_id      SMALLINT,
+      -- priority_id   SMALLINT,
+      -- health_id     SMALLINT,
+      phase         VARCHAR(32),
+      priority      VARCHAR(32),
+      health        VARCHAR(32),
+      name          VARCHAR(128),
+      agency        VARCHAR(128),
+      department    VARCHAR(128),
+      theme         VARCHAR(128),
+      description   TEXT,
+      service_url   VARCHAR(256),
+      location      VARCHAR(64)
+    );
+    
+    DROP TABLE IF EXISTS phases;
+    CREATE TABLE phases (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(32)
     );
   `);
-
   insertProject(dbClient, "ProjectName", "ProjectAgency");
   migrateJSON(dbClient, "/../lib/projects/");
 
@@ -32,7 +46,7 @@ pg.connect(process.env.DATABASE_URL, function(err, dbClient) {
 
 function insertProject(dbClient, project){
   dbClient.query(`
-    INSERT INTO projects VALUES('` + project.name + `', '` + project.agency+`');
+    INSERT INTO projects(name, agency) VALUES('` + project.name + `', '` + project.agency+`');
   `);
 }
 
