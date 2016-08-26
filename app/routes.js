@@ -73,125 +73,56 @@ return unauthorized(res);
     return data;
   }
 
-  /*
-  - - - - - - - - - -  agency INDEX PAGE - - - - - - - - - -
-  */
-  router.get('/agency', function (req, res) {
-    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
-    data = _.groupBy(data, 'agency');
-    var new_data = indexify(data);
-    var phases = _.countBy(req.app.locals.data, 'phase');
-
-    var agency_order = [];
-    _.each(data, function(value, key, list) {
-      agency_order.push(key);
-    });
-    agency_order.sort();
-
-    res.render('index', {
-      "data":new_data,
-      "phase": req.query.phase,
-      "counts":phases,
-      "view":"agency",
-      "row_order":agency_order,
-      "phase_order":phase_order
+  /**
+   * If no rowOrder was specified, prepare an alphabetical one
+   * else return the exact same rowOrder as given in the parameter
+   * useful when you want to force a specific order instead of an alphabetical one
+   * ex: ['Top', 'High', 'Medium'] to make the 'Top' priority section appear first
+   * @param  {String[]} [rowOrder] list that forces the order of values by which the projects are grouped
+   * @param  {Object[]} projects data
+   * @return {String[]} list showing the order of values by which the projects are grouped
+   */
+  function prepareRowOrderIfNotPresent(rowOrder, data){
+    if(rowOrder === undefined) {
+      rowOrder = [];
+      _.each(data, function(value, key, list) {
+        rowOrder.push(key);
+      });
+      rowOrder.sort();
     }
-    );
-  });
+    return rowOrder;
+  }
 
-  /*
-  - - - - - - - - - -  LOCATION INDEX PAGE - - - - - - - - - -
-  */
-  router.get(['/','/location'], function (req, res) {
-    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
-    data = _.groupBy(data, 'location');
-    var new_data = indexify(data);
+  /**
+   * @param  {String} groupBy Name of the field by which the projects will be grouped
+   * @param  {String} path Router path, ex: '/location'
+   * @param  {String[]} [rowOrder] Order of values by which to group the projects, default: alphabetical
+   */
+  function setupIndexPageRoute(groupBy, path, rowOrder){
+    router.get(path, function (req, res) {
+      var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
+      data = _.groupBy(data, groupBy);
+      var new_data = indexify(data);
+      var phases = _.countBy(req.app.locals.data, 'phase');
+      rowOrder = prepareRowOrderIfNotPresent(rowOrder, data);
 
-    var loc_order = [];
-    _.each(data, function(value, key, list) {
-      loc_order.push(key);
+      res.render('index', {
+        "data":new_data,
+        "phase": req.query.phase,
+        "counts":phases,
+        "view":groupBy,
+        "row_order":rowOrder,
+        "phase_order":phase_order
+      }
+      );
     });
-    loc_order.sort();
+  }
 
-    var phases = _.countBy(req.app.locals.data, 'phase');
-    res.render('index', {
-      "data":new_data,
-      "phase": req.query.phase,
-      "counts":phases,
-      "view":"location",
-      "row_order":loc_order,
-      "phase_order":phase_order
-    });
-  });
-
-
-
-  /*
- - - - - - - - - - -  THEME INDEX PAGE - - - - - - - - - -
- */
- router.get('/theme/', function (req, res) {
-  var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
-  data = _.groupBy(data, 'theme');
-  var new_data = indexify(data);
-
-  var theme_order = [];
-  _.each(data, function(value, key, list) {
-    theme_order.push(key);
-  });
-  theme_order.sort();
-
-  var phases = _.countBy(req.app.locals.data, 'phase');
-  res.render('index', {
-    "data":new_data,
-    "phase": req.query.phase,
-    "counts":phases,
-    "view":"theme",
-    "row_order":theme_order,
-    "phase_order":phase_order
-  });
-});
-
-
-  /*
-  - - - - - - - - - - HEALTH INDEX PAGE - - - - - - - - - -
-  */
-  router.get('/health/', function (req, res) {
-    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
-    data = _.groupBy(data, 'health');
-    var new_data = indexify(data);
-    var phases = _.countBy(req.app.locals.data, 'phase');
-
-    res.render('index', {
-      "data":new_data,
-      "phase": req.query.phase,
-      "counts":phases,
-      "view":"health",
-      "row_order": health_order,
-      "phase_order":phase_order
-    }
-    );
-  });
-
-  /*
-  - - - - - - - - - - PRIORITY INDEX PAGE - - - - - - - - - -
-  */
-  router.get('/priority/', function (req, res) {
-    var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
-    data = _.groupBy(data, 'priority');
-    var new_data = indexify(data);
-    var phases = _.countBy(req.app.locals.data, 'phase');
-
-    res.render('index', {
-      "data":new_data,
-      "phase": req.query.phase,
-      "counts":phases,
-      "view":"priority",
-      "row_order":priority_order,
-      "phase_order":phase_order,
-      "priority_descriptions":priority_descriptions
-    }
-    );
-  });
+  setupIndexPageRoute('location', ['/', '/location']);
+  setupIndexPageRoute('agency', '/agency');
+  setupIndexPageRoute('theme', '/theme');
+  setupIndexPageRoute('health', '/health', health_order);
+  setupIndexPageRoute('priority', '/priority', priority_order);
 
   /*
   - - - - - - - - - -  PROJECT PAGE - - - - - - - - - -
