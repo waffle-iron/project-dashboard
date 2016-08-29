@@ -51,17 +51,9 @@ controller.setupIndexPageRoute('theme', '/theme');
 controller.setupIndexPageRoute('health', '/health', health_order);
 controller.setupIndexPageRoute('priority', '/priority', priority_order);
 
-router.get('/projects/:id/:slug', function(req, res) { 
-  controller.handleProjectIdSlug(req, res);
-});
-router.get('/projects/:id/:slug/prototype', function(req, res) { 
-  controller.handleSlugPrototype(req, res);
-});
-router.get('/api', function(req, res) { 
-  controller.handleApi(req, res);
-});
-router.get('/api/:id', function(req, res) { 
-  controller.handleApiProjectId(req, res);
-});
+router.get('/projects/:id/:slug', controller.handleProjectIdSlug);
+router.get('/projects/:id/:slug/prototype', controller.handleSlugPrototype);
+router.get('/api', controller.handleApi);
+router.get('/api/:id', controller.handleApiProjectId);
 
 module.exports = router;
