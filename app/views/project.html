@@ -88,10 +88,9 @@
   </div>
   
   <div class="grid-row">
-  
-   {% macro peopleTable(peopleData) %}
+   {% macro peopleTable(peopleData, teamName) %}
     <section class="column-half">
-      <h2 class="heading-medium">Kainos team</h2>
+      <h2 class="heading-medium">{{ teamName }} team</h2>
         <div>
           {% if data["ourTeam"] %}
             <table>
@@ -117,7 +116,7 @@
                      </section>
                      <section class="column-half">
                        {% if teamMember.email %}
-                         <p>Email: {{ teamMember.email}} </p>
+                         <p>Email: <a href="mailto:{{ teamMember.email }}">{{ teamMember.email }}</a></p>
                        {% endif %}
                        
                        {% if teamMember.mobile %}
@@ -141,9 +140,8 @@
         </div>
       </section>
   {% endmacro %} 
-  
-  {{ peopleTable(data["ourTeam"]) }}
-  {{ peopleTable(data["clientTeam"]) }}
-  </div>  
+  {{ peopleTable(data["ourTeam"], "Kainos") }}
+  {{ peopleTable(data["clientTeam"], "Client") if data["clientTeam"] }}
+  </div>
 </main>
 {% endblock %}
