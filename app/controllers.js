@@ -10,6 +10,44 @@ function Controller(router){
 // A way to force the ordering of the phases.
 var phase_order = ['pipeline', 'discovery','alpha','beta','live'];
 
+// JSON data of a project
+Controller.prototype.handleApiProjectId = function (req, res) {
+  var data = _.findWhere(req.app.locals.data, {id: (parseInt(req.params.id))});
+  if (data) {
+    res.json(data);
+  } else {
+    res.json({error: 'ID not found'});
+  }
+}
+
+// All the data as JSON
+Controller.prototype.handleApi = function (req, res) {
+  console.log(req.app.locals.data);
+  res.json(req.app.locals.data);
+}
+
+// Project info
+Controller.prototype.handleProjectIdSlug = function(req, res) {
+  var data = _.findWhere(req.app.locals.data, {id:parseInt(req.params.id)});
+  res.render('project', {
+    "data":data,
+    "phase_order":phase_order,
+  });
+}
+
+// Prototype version of project info 
+Controller.prototype.handleSlugPrototype = function(req, res) {
+  var id = req.params.id;
+  var data = _.findWhere(req.app.locals.data, {id:parseInt(id)});
+  if (typeof data.prototype == 'undefined') {
+    res.render('no-prototype',{
+      "data":data,
+    });
+  } else {
+    res.redirect(data.prototype);
+  }
+}
+
 /**
  * @param  {String} groupBy Name of the field by which the projects will be grouped
  * @param  {String} path Router path, ex: '/location'

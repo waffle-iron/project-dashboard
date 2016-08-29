@@ -28,7 +28,7 @@ router.use(function (req, res, next) {
 });
 
 var priority_descriptions = {
-  "Low":"Non-urgent services and those that have short-term benefit."
+  "Low": "Non-urgent services and those that have short-term benefit."
 };
 
 var priority_order = [
@@ -51,48 +51,17 @@ controller.setupIndexPageRoute('theme', '/theme');
 controller.setupIndexPageRoute('health', '/health', health_order);
 controller.setupIndexPageRoute('priority', '/priority', priority_order);
 
-/*
-- - - - - - - - - -  PROJECT PAGE - - - - - - - - - -
-*/
-router.get('/projects/:id/:slug', function (req, res) {
-  var data = _.findWhere(req.app.locals.data, {id:parseInt(req.params.id)});
-  res.render('project', {
-    "data":data,
-    "phase_order":phase_order,
-  });
+router.get('/projects/:id/:slug', function(req, res) { 
+  controller.handleProjectIdSlug(req, res);
 });
-
-/*
-- - - - - - - - - -  PROTOTYPE REDRIECT - - - - - - - - - -
-*/
-router.get('/projects/:id/:slug/prototype', function (req, res) {
-  var id = req.params.id;
-  var data = _.findWhere(req.app.locals.data, {id:parseInt(id)});
-  if (typeof data.prototype == 'undefined') {
-    res.render('no-prototype',{
-      "data":data,
-    });
-  } else {
-    res.redirect(data.prototype);
-  }
+router.get('/projects/:id/:slug/prototype', function(req, res) { 
+  controller.handleSlugPrototype(req, res);
 });
-
-/*
-- - - - - - - - - -  ALL THE DATA AS JSON - - - - - - - - - -
-*/
-
-router.get('/api', function (req, res) {
-  console.log(req.app.locals.data);
-  res.json(req.app.locals.data);
+router.get('/api', function(req, res) { 
+  controller.handleApi(req, res);
 });
-
-router.get('/api/:id', function (req, res) {
-  var data = _.findWhere(req.app.locals.data, {id: (parseInt(req.params.id))});
-  if (data) {
-    res.json(data);
-  } else {
-    res.json({error: 'ID not found'});
-  }
+router.get('/api/:id', function(req, res) { 
+  controller.handleApiProjectId(req, res);
 });
 
 module.exports = router;
