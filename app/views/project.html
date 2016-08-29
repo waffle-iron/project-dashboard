@@ -103,10 +103,10 @@
                <tr>
                  <td>{{ teamMember.role}}</td>
                  <td>{{ teamMember.name }}</td>
-                 <td data-collapsable-parent="1">...</td>
+                 <td data-collapsable-parent="{{ teamName + loop.index }}">...</td>
                </tr>
                <tr>
-                 <td data-collapsable-child="1" colspan="3">
+                 <td data-collapsable-child="{{ teamName + loop.index }}" colspan="3">
                    <div class="grid-row">
                      <section class="column-half">
                        <p>Primary location: {{ teamMember.primaryLocation }} </p>
