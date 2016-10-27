@@ -73,14 +73,13 @@ passport.use(new OIDCStrategy(strategyConfig,
           users.push(profile);
           return done(null, profile);
         }
-        return done(user);
+        return done(null, user);
       });
     });
   }
 ));
 
 passport.serializeUser(function (user, done) {
-  console.log("user: " + user);
   done(null, user.email);
 });
 

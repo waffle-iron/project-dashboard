@@ -1,8 +1,9 @@
 var express     = require('express'),
     _           = require("underscore"),
+    connect     = require('connect-ensure-login'),
     router      = express.Router();
 
-router.get('/display/:number?/:location?', function(req,res,next) {
+router.get('/display/:number?/:location?', connect.ensureLoggedIn(), function(req,res,next) {
   req.data = {};
 
   // Grab number from URL. 0 is default.

@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var connect = require('connect-ensure-login');
 
 function Controller(router){
   if (!(this instanceof Controller)) {
@@ -54,7 +55,7 @@ Controller.prototype.handleSlugPrototype = function(req, res) {
  * @param  {String[]} [rowOrder] Order of values by which to group the projects, default: alphabetical
  */
 Controller.prototype.setupIndexPageRoute = function(groupBy, path, rowOrder) {
-  this.router.get(path, function (req, res) {
+  this.router.get(path, connect.ensureLoggedIn(), function (req, res) {
     var data = filterPhaseIfPresent(req.app.locals.data, req.query.phase);
     data = _.groupBy(data, groupBy);
     var new_data = indexify(data);
