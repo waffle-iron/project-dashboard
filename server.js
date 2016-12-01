@@ -1,16 +1,23 @@
 var path        = require('path'),
     fs          = require('fs'),
     merge       = require('merge'),
+    session     = require('express-session'),
+    cookieParser= require('cookie-parser'),
+    flash       = require('connect-flash'),
     express     = require('express'),
     browserSync = require('browser-sync'),
     nunjucks    = require('express-nunjucks'),
     _           = require('underscore'),
     routes      = require(__dirname + '/app/routes.js'),
     dis_routes  = require(__dirname + '/app/views/display/routes.js'),
+    authRoutes  = require(__dirname + '/app/authRoutes.js'),
+    passport    = require('passport'),
     favicon     = require('serve-favicon'),
     app         = express(),
-    port        = process.env.PORT || 3100,
+    port        = process.env.PORT || 8090,
     env         = process.env.NODE_ENV || 'development';
+
+require(__dirname + '/app/passport.js'),
 
 function requireHTTPS(req, res, next) {
   // Heroku terminates SSL connections at the load balancer level, so req.secure will never be true
@@ -19,27 +26,28 @@ function requireHTTPS(req, res, next) {
   }
   next();
 }
+
 if (env === 'production') {
   app.use(requireHTTPS);
 }
 
-  /*
-  Load all the project data from the files.
-  */
-  var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
-  var files = fs.readdirSync(__dirname + '/lib/projects/');
-  app.locals.data = [];
-  _.each(files,function(el) {
-    if (el == 'defaults.json') return;
-    var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
-    try {
-      var json = merge(true,defaults,JSON.parse(file));
-      json.filename = el;
-      app.locals.data.push(json);
-    } catch(err) {
-      console.log(err);
-    }
-  });
+/*
+Load all the project data from the files.
+*/
+var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
+var files = fs.readdirSync(__dirname + '/lib/projects/');
+app.locals.data = [];
+_.each(files,function(el) {
+  if (el == 'defaults.json') return;
+  var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
+  try {
+    var json = merge(true,defaults,JSON.parse(file));
+    json.filename = el;
+    app.locals.data.push(json);
+  } catch(err) {
+    console.log(err);
+  }
+});
 
 // Application settings
 app.set('view engine', 'html');
@@ -70,6 +78,23 @@ app.use(function (req, res, next) {
   next();
 });
 
+if(!process.env.COOKIE_SECRET) {
+  console.warn('COOKIE_SECRET is not set. Unsafe cookie secret will be used instead.');
+}
+app.use(cookieParser(process.env.COOKIE_SECRET || "unsafe-secret-CHANGE-ME"));
+app.use(session({cookie: { maxAge: 60000 }}));
+app.use(flash());
+
+// all routes will have access to this flash message
+app.use(function(req, res, next){
+    res.locals.success = req.flash('success');
+    next();
+});
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
+
 // routes (found in app/routes.js)
 if (typeof(routes) != "function"){
   console.log(routes.bind);
@@ -78,6 +103,7 @@ if (typeof(routes) != "function"){
 } else {
   app.use("/", dis_routes);
   app.use("/", routes);
+  app.use("/", authRoutes);
 }
 
 // auto render any view that exists

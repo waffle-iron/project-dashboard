@@ -20,3 +20,4 @@ docs
 .settings/
 /node_modules/
 /lib/
+.vscode/
