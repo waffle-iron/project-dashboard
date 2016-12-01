@@ -5,13 +5,7 @@ var express     = require('express'),
     controllers = require('./controllers'),
     basicAuth   = require('basic-auth'),
     _           = require('underscore');
-
-try {
-  var userFile = fs.readFileSync(__dirname + '/login-password.json').toString();
-  var storedUser = JSON.parse(userFile);
-} catch(err) {
-  console.log(err);
-}
+    log         = require('./logger');
 
 var priority_descriptions = {
   "Low": "Non-urgent services and those that have short-term benefit."
