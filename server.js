@@ -17,7 +17,7 @@ var path        = require('path'),
     port        = process.env.PORT || 8090,
     env         = process.env.NODE_ENV || 'development';
 
-require(__dirname + '/app/passport.js'),
+require(__dirname + '/app/passport.js');
 
 function requireHTTPS(req, res, next) {
   // Heroku terminates SSL connections at the load balancer level, so req.secure will never be true
