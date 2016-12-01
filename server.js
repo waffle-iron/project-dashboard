@@ -27,45 +27,27 @@ function requireHTTPS(req, res, next) {
   next();
 }
 
-if(!process.env.COOKIE_SECRET) {
-  console.warn('COOKIE_SECRET is not set. Unsafe cookie secret will be used instead.');
-}
-app.use(cookieParser(process.env.COOKIE_SECRET || "unsafe-secret-CHANGE-ME"));
-app.use(session({cookie: { maxAge: 60000 }}));
-app.use(flash());
-
-// Initialize Passport and restore authentication state, if any, from the
-// session.
-app.use(passport.initialize());
-app.use(passport.session());
-
-// all routes will have access to this flash message
-app.use(function(req, res, next){
-    res.locals.success = req.flash('success');
-    next();
-});
-
 if (env === 'production') {
   app.use(requireHTTPS);
 }
 
-  /*
-  Load all the project data from the files.
-  */
-  var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
-  var files = fs.readdirSync(__dirname + '/lib/projects/');
-  app.locals.data = [];
-  _.each(files,function(el) {
-    if (el == 'defaults.json') return;
-    var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
-    try {
-      var json = merge(true,defaults,JSON.parse(file));
-      json.filename = el;
-      app.locals.data.push(json);
-    } catch(err) {
-      console.log(err);
-    }
-  });
+/*
+Load all the project data from the files.
+*/
+var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
+var files = fs.readdirSync(__dirname + '/lib/projects/');
+app.locals.data = [];
+_.each(files,function(el) {
+  if (el == 'defaults.json') return;
+  var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
+  try {
+    var json = merge(true,defaults,JSON.parse(file));
+    json.filename = el;
+    app.locals.data.push(json);
+  } catch(err) {
+    console.log(err);
+  }
+});
 
 // Application settings
 app.set('view engine', 'html');
@@ -95,6 +77,23 @@ app.use(function (req, res, next) {
   res.locals.asset_path="/public/";
   next();
 });
+
+if(!process.env.COOKIE_SECRET) {
+  console.warn('COOKIE_SECRET is not set. Unsafe cookie secret will be used instead.');
+}
+app.use(cookieParser(process.env.COOKIE_SECRET || "unsafe-secret-CHANGE-ME"));
+app.use(session({cookie: { maxAge: 60000 }}));
+app.use(flash());
+
+// all routes will have access to this flash message
+app.use(function(req, res, next){
+    res.locals.success = req.flash('success');
+    next();
+});
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
 
 // routes (found in app/routes.js)
 if (typeof(routes) != "function"){

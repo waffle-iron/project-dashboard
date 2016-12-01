@@ -37,17 +37,26 @@ var log = bunyan.createLogger({
     }]
 });
 
+/**
+ * Replaces the local-part of an email with asterisks except for the first and the last character
+ * @param {any} email Email to mask
+ * @returns Masked email
+ */
+function maskEmail(email){
+  return email.replace(/(?!^).(?=[^@]+@)/g, '*');
+}
+
 if (strategyConfig.loggingLevel) { log.levels("console", strategyConfig.loggingLevel); }
 
 // array to hold logged in users
 var users = [];
 
 var findByEmail = function (email, fn) {
-  log.info('Searching for a user by email: ' + email);
+  log.info('Searching for a user by email: ' + maskEmail(email));
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
     if (user.email === email) {
-      log.info('User was found using his email: ' + email);
+      log.info('User was found using his email: ' + maskEmail(email));
       return fn(user);
     }
   }
@@ -69,11 +78,11 @@ passport.use(new OIDCStrategy(strategyConfig,
     process.nextTick(function () {
       findByEmail(email, function(user){
         if (!user) {
-          log.info("Registering a new user using his email: " + email);
+          log.info("Registering a new user using his email: " + maskEmail(email));
           users.push(profile);
           return done(null, profile);
         }
-        log.info("Authenticating an existing user: " + email);
+        log.info("Authenticating an existing user: " + maskEmail(email));
         return done(null, user);
       });
     });
@@ -81,13 +90,13 @@ passport.use(new OIDCStrategy(strategyConfig,
 ));
 
 passport.serializeUser(function (user, done) {
-  log.info("Serializing user: " + user.email);
+  log.info("Serializing user: " + maskEmail(user.email));
   done(null, user.email);
 });
 
-passport.deserializeUser(function (id, done) {
-  log.info("Deserializing user: " + id);
-  findByEmail(id, function (user) {
+passport.deserializeUser(function (email, done) {
+  log.info("Deserializing user: " + maskEmail(email));
+  findByEmail(email, function (user) {
     done(null, user);
   });
 });
