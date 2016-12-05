@@ -23,7 +23,6 @@ Controller.prototype.handleApiProjectId = function (req, res) {
 
 // All the data as JSON
 Controller.prototype.handleApi = function (req, res) {
-  console.log(req.app.locals.data);
   res.json(req.app.locals.data);
 }
 
