@@ -4,8 +4,8 @@
  * Configure passport for simple database authentication
  */
 const passport = require('passport');
-const bunyan = require('bunyan');
 const config = require('./configAzureAD');
+const log = require('./logger');
 const OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 
 var strategyConfig = {
@@ -20,22 +20,8 @@ var strategyConfig = {
   responseType: config.creds.responseType,
   responseMode: config.creds.responseMode,
   validateIssuer: config.creds.validateIssuer,
-  passReqToCallback: config.creds.passReqToCallback,
-  loggingLevel: config.creds.loggingLevel
+  passReqToCallback: config.creds.passReqToCallback
 };
-
-var log = bunyan.createLogger({
-  name: 'Project Dashboard - passport.js',
-  streams: [{
-    stream: process.stderr,
-    level: "error",
-    name: "error"
-  }, {
-      stream: process.stdout,
-      level: "warn",
-      name: "console"
-    }]
-});
 
 /**
  * Replaces the local-part of an email with asterisks except for the first and the last character

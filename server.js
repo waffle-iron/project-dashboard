@@ -11,6 +11,7 @@ var path        = require('path'),
     routes      = require(__dirname + '/app/routes.js'),
     dis_routes  = require(__dirname + '/app/views/display/routes.js'),
     authRoutes  = require(__dirname + '/app/authRoutes.js'),
+    log         = require(__dirname + '/app/logger.js'),
     passport    = require('passport'),
     favicon     = require('serve-favicon'),
     app         = express(),
@@ -45,7 +46,7 @@ _.each(files,function(el) {
     json.filename = el;
     app.locals.data.push(json);
   } catch(err) {
-    console.log(err);
+    log.error(err);
   }
 });
 
@@ -79,7 +80,7 @@ app.use(function (req, res, next) {
 });
 
 if(!process.env.COOKIE_SECRET) {
-  console.warn('COOKIE_SECRET is not set. Unsafe cookie secret will be used instead.');
+  log.warn('COOKIE_SECRET is not set. Unsafe cookie secret will be used instead.');
 }
 app.use(cookieParser(process.env.COOKIE_SECRET || "unsafe-secret-CHANGE-ME"));
 app.use(session({cookie: { maxAge: 60000 }}));
@@ -97,8 +98,8 @@ app.use(passport.session());
 
 // routes (found in app/routes.js)
 if (typeof(routes) != "function"){
-  console.log(routes.bind);
-  console.log("Warning: the use of bind in routes is deprecated - please check the prototype kit documentation for writing routes.")
+  log.info(routes.bind);
+  log.warn("The use of bind in routes is deprecated - please check the prototype kit documentation for writing routes.")
   routes.bind(app);
 } else {
   app.use("/", dis_routes);
@@ -145,6 +146,4 @@ if (env === 'production') {
   });
 }
 
-console.log('');
-console.log('Listening on port ' + port);
-console.log('');
+log.info('Listening on port ' + port);

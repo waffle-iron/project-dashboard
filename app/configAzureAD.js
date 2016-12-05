@@ -38,7 +38,4 @@
     // if you want to use the req object in your verify function for the passport strategy, set passReqToCallback true.
     // for example, if your verify function is like "function(req, profile, done)", passReqToCallback should be set true.
     passReqToCallback: process.env.AZURE_PASS_REQ_TO_CALLBACK || false,
-    
-    // valid are 'info', 'warn', 'error'. Error always goes to stderr in Unix.
-    loggingLevel: process.env.PASSPORT_LOGGING_LEVEL || 'warn',
 };
