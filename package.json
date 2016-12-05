@@ -11,6 +11,7 @@
     "postinstall": "grunt generate-assets"
   },
   "dependencies": {
+    "aws-sdk": "^2.7.10",
     "basic-auth": "^1.0.4",
     "browser-sync": "^2.10.0",
     "bunyan": "^1.8.1",
