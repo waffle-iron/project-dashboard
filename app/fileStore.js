@@ -1,6 +1,7 @@
-var AWS = require('aws-sdk');
-var fs = require('fs');
-var _ = require('underscore');
+var AWS     = require('aws-sdk');
+var fs      = require('fs');
+var _       = require('underscore');
+var log     = require('./logger');
 
 var s3 = new AWS.S3({
     signatureVersion: 'v4',
@@ -11,8 +12,13 @@ var s3 = new AWS.S3({
 function createDirectoryIfNotExists(directory) {
   try {
     fs.mkdirSync(directory);
+    log.debug('Creating a directory: ' + directory);
   } catch(e) {
-    if ( e.code != 'EEXIST' ) throw e;
+    if ( e.code != 'EEXIST' ) {
+        throw e;
+    } else {
+        log.debug('Skipping creation of a directory as it already exists: ' + directory);
+    }
   }
 }
 
@@ -31,12 +37,16 @@ function saveBucketObject(sourceObjectName, destinationDirectory, bucketName, do
 
     s3.getObject(params, function(err, data) {
         if (err) {
-            console.log(err, err.stack);
+            log.error(err, err.stack);
             done();
         } else { 
             var file = fs.createWriteStream(destinationDirectory + sourceObjectName);
+            log.debug('Downloading file: ' + sourceObjectName);
             var stream = s3.getObject(params).createReadStream().pipe(file);
-            stream.on('finish', function () { done() });
+            stream.on('finish', function () { 
+                log.debug('The file has been saved to: ' + destinationDirectory + sourceObjectName);
+                done();
+            });
         }
     });
 }
@@ -51,7 +61,7 @@ function saveBucketObject(sourceObjectName, destinationDirectory, bucketName, do
 function downloadFiles(bucketName, destinationDirectory, done) {
     s3.listObjects({Bucket: bucketName}, function(err, data) {
         if (err) {
-            console.log(err, err.stack);
+            log.error(err, err.stack);
             done();
         } else {
             createDirectoryIfNotExists(destinationDirectory);

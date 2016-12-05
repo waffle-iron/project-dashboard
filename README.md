@@ -3,6 +3,7 @@
 ## Configuration
 
 Provide AWS credentials and the name of your S3 bucket that contains project data.
+You may skip `AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY` if proper credentials were set in AWS configuration file (`~/.aws/credentials` in Linux, OS X, or Unix).
 
 ```
 AWS_ACCESS_KEY=xxxxxxxxx

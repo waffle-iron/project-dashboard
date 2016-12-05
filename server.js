@@ -49,7 +49,7 @@ fileStore.downloadFiles(process.env.S3_BUCKET_NAME, __dirname + '/lib/projects/'
       json.filename = el;
       app.locals.data.push(json);
     } catch(err) {
-      console.log(err);
+      log.error(err);
     }
   });
 });
