@@ -11,6 +11,7 @@ var path        = require('path'),
     routes      = require(__dirname + '/app/routes.js'),
     dis_routes  = require(__dirname + '/app/views/display/routes.js'),
     authRoutes  = require(__dirname + '/app/authRoutes.js'),
+    fileStore   = require(__dirname + '/app/fileStore.js'),
     log         = require(__dirname + '/app/logger.js'),
     passport    = require('passport'),
     favicon     = require('serve-favicon'),
@@ -32,22 +33,25 @@ if (env === 'production') {
   app.use(requireHTTPS);
 }
 
-/*
-Load all the project data from the files.
-*/
-var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
-var files = fs.readdirSync(__dirname + '/lib/projects/');
-app.locals.data = [];
-_.each(files,function(el) {
-  if (el == 'defaults.json') return;
-  var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
-  try {
-    var json = merge(true,defaults,JSON.parse(file));
-    json.filename = el;
-    app.locals.data.push(json);
-  } catch(err) {
-    log.error(err);
-  }
+// Download files
+fileStore.downloadFiles(process.env.S3_BUCKET_NAME, __dirname + '/lib/projects/', function() {
+  /*
+  Load all the project data from the files.
+  */
+  var defaults = JSON.parse(fs.readFileSync(__dirname + '/lib/projects/defaults.json').toString());
+  var files = fs.readdirSync(__dirname + '/lib/projects/');
+  app.locals.data = [];
+  _.each(files,function(el) {
+    if (el == 'defaults.json') return;
+    var file = fs.readFileSync(__dirname + '/lib/projects/'+el).toString();
+    try {
+      var json = merge(true,defaults,JSON.parse(file));
+      json.filename = el;
+      app.locals.data.push(json);
+    } catch(err) {
+      log.error(err);
+    }
+  });
 });
 
 // Application settings
